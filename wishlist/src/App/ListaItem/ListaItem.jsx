@@ -1,16 +1,30 @@
 import React from 'react';
+import PropTypes from 'prop-types'
 import classNames from "classnames";
-import { useState } from 'react';
 
-const ListaItem = ({texto, realizado, i}) => {
-  const [checked, setChecked] = useState(false);
+const ListaItem = ({texto, realizado, id, onRealizadoChange}) => {
+
   return (
-  <li key={texto} className={classNames('lista-deseos__item',{'lista-deseos__item--cumplido': checked})}>
-    <input id={`deseo${i}`} type="checkbox"
-    checked={checked ? true : false} onClick={() => setChecked(!checked)} />
-    <label htmlFor={`deseo${i}`}>{texto}</label>
+  <li key={texto} className={classNames('lista-deseos__item',{'lista-deseos__item--cumplido': realizado})}>
+    <input id={id} type="checkbox" onChange={e => onRealizadoChange(e.target.checked)}
+    checked={realizado} />
+    <label htmlFor={id}>{texto}</label>
   </li>
   );
+}
+
+ListaItem.propTypes = {
+  TEXTO: PropTypes.string,
+  realizado: PropTypes.bool,
+  id: PropTypes.string,
+  onRealizadoChange: PropTypes.func,
+}
+
+ListaItem.defaultProps = {
+  texto: "",
+  realizado: false,
+  id: "",
+  deseos: () => {},
 }
 
 export default ListaItem;

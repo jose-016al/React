@@ -1,11 +1,18 @@
 import React from 'react';
+import PropTypes from "prop-types"
 
-
-const Boton = () => {
-    const boton = () => {alert("Has pinchado");}
+const Boton = ({ onArchivadoClick }) => {
     return (
-        <button className='deseo-clear' type="buttom" onClick={boton}>Archivar</button>
+        <button className='deseos-clear' type="buttom" onClick={onArchivadoClick}>Archivar</button>
     );
+}
+
+Boton.propTypes = {
+    onArchivadoClick: PropTypes.func,
+}
+
+Boton.defaultProp = {
+    onArchivadoClick: () => {},
 }
 
 export default Boton;
