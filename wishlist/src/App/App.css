@@ -56,6 +56,14 @@ body,html{
   text-decoration: line-through;
 }
 
+.lista-deseos__item--warning label {
+  color: orange;
+}
+
+.lista-deseos__item--danger label {
+  color: red;
+}
+
 .deseos-clear{
   width: 100%;
   padding: 0.5rem;
