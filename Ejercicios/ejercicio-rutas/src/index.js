@@ -9,9 +9,6 @@ import {
   RouterProvider,
 } from "react-router-dom";
 import Posts from './Routes/Posts';
-import Nav from './Routes/Nav';
-
-
 
 const router = createBrowserRouter([
   {
