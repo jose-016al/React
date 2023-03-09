@@ -8,6 +8,7 @@
 - [Hooks UseEffect](#hooks-useeffect)
 - [React Router](#react-router)
 - [Consultar APIS](#consultar-apis)
+- [Componente CARD](#el-componente-card-de-bootstrap)
 
 # Creacion de un proyecto
 
@@ -236,12 +237,29 @@ const [usuario, setUsuario] = useState([]);
         </>
     );
 ```
-```javascript
 
+# El componente CARD de bootstrap
+
+Para poder trabajar con este componente antes debemos instalar bootstrap en nuestro proyecto
+```powershell
+npm install bootstrap react-bootstrap
 ```
+Lo importamos en nuestro proyecto
 ```javascript
-
+import Card from 'react-bootstrap/Card';
+import 'bootstrap/dist/css/bootstrap.min.css';
 ```
+Si hemos importado el componete card podremos usarlo de la sigueinte manera
 ```javascript
-
+<Card style={{ width: '400px' }}>
+    {pelicula[selectorId] && (
+    <Card.Body>
+        <Card.Title className="text-center"> { pelicula[selectorId].title } </Card.Title>
+        <img className="mx-auto d-block" src={`https://image.tmdb.org/t/p/w500/${pelicula[selectorId].poster_path}`} alt="Poster de la película" style={{ width: '350px'}}/>
+        <Card.Text className="text-center">
+            {pelicula[selectorId].overview}
+        </Card.Text>
+    </Card.Body>
+    )}
+</Card>
 ```

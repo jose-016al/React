@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 
-const Peliucla = () => {
+const Peliucla = ({selectorId, setSelectorId}) => {
     const [pelicula, setPelicula] = useState([]);
 
     useEffect(() => {
@@ -14,21 +14,20 @@ const Peliucla = () => {
             const respuesta = await fetch(url);
             const json = await respuesta.json();
             setPelicula(json.results);
-            console.log(json.results);
         }
         catch (error) {
             console.log("error: " + error);
         }
     }
-    
+
     return (
-      <select>
-        {pelicula.map(peli => (
-                <option key={peli.id}>
-                    {peli.original_title}
+        <select value={selectorId} onChange={(e) => setSelectorId(e.target.value)}>
+            {pelicula.map((peli, index) => (
+                <option key={peli.id} value={index}>
+                    {peli.title}
                 </option>
             ))}
-      </select>  
+        </select>  
     );
 }
 
