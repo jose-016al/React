@@ -8,7 +8,8 @@
 - [Variables](#variables)
 - [Condicionales y bucles en JSX](#condicionales-y-bucles-en-jsx)
 - [Comunicacion entre componentes (props, PropTypes)](#comunicacion-entre-componentes-props-proptypes)
-  - [PropTypes](#proptypes)
+  - [Validacion de props (PropTypes)](#validacion-de-props-proptypes)
+- [Eventos](#eventos)
 
 # Extensiones para VS code y el navegador
 Podemos instalar extensiones para mejorar el funcionamienot de React en nuestro entorno de desarrollo
@@ -35,7 +36,7 @@ npm start
 ```
 
 # Componentes 
-Un componente es una parte de la aplicacion, para ello creamos un archivo en el directorio src, en mi caso lo llamare MiComponete.js (Debe ir en mayuscula siempre)
+Un componente es una parte de la aplicacion, para ello creamos un directorio en src, donde almacenaremos los componentes que vayamos creando, lo podemos llamar componentes, y dentro de el creamos un archivo en, en mi caso lo llamare MiComponete.js (Debe ir en mayuscula siempre)
 ```jsx
   // Funcion del compoennt
 const MiComponente = () => {
@@ -187,7 +188,7 @@ export const SegundoComponente = () => {
 
 # Comunicacion entre componentes (props, PropTypes)
 Podemos pasar variableso o datos de un componente a otro por medio de las props
-```javascript
+```jsx
 function App() {
 
   const ficha_medica = {
@@ -207,7 +208,7 @@ function App() {
 }
 ```
 De esta forma tan sencilla podemos usar las props para enviar datos de un componente a otro
-```javascript
+```jsx
 export const TercerComponente = (props) => {
   return (
     <div>
@@ -222,7 +223,7 @@ export const TercerComponente = (props) => {
 }
 ```
 Si queremos evitar tener que estar repitiendo "props" cada vez que llamemos a una variable, podemos usar la desestructuracion de javascript de la siguiente manera quedaria mucho mas claro
-```javascript
+```jsx
 export const TercerComponente = ({nombre, apellidos, ficha}) => {
   return (
     <div>
@@ -237,140 +238,258 @@ export const TercerComponente = ({nombre, apellidos, ficha}) => {
 }
 ```
 
-## PropTypes
+## Validacion de props (PropTypes)
+Cuando hacemos uso de las props para comunicar componentes, tenemos la posbilidad de validar esas props y poner ciertos filtros, es decir que si tengo nombre asegurarme de que este sea un STring  
+Podemos consultar la documentacion de [PropTypes](https://legacy.reactjs.org/docs/typechecking-with-proptypes.html)
+```jsx
+import React from 'react'
+import PropTypes from 'prop-types'; // Esta seria la importacion
 
-```javascript
+export const TercerComponente = ({nombre, apellidos, ficha}) => {
+  return (
+    <div>
+        <h1>Comunicacion entre componentes</h1>
+        <ul>
+            <li>{ nombre }</li>
+            <li>{ apellidos }</li>
+            <li>{ ficha.estado }</li>
+        </ul>
+    </div>
+  )
+}
+
+  // De esta forma realizamos la validacion de las props, y si son requeridas
+TercerComponente.propTypes = {
+  nombre: PropTypes.string.isRequired,
+  apellidos: PropTypes.string.isRequired,
+  ficha: PropTypes.object
+}
+```
+Con PropsTypes podemos tambien asignar valores por defecto
+```jsx
+TercerComponente.propTypes = {
+  // ---
+}
+
+  // Asignamos nombre y apellidos con valores por defecto, en el caso de que no reciban ningun dato
+TercerComponente.defaultProps = {
+  nombre: "Alberto",
+  apellidos: "Martinez"
+}
+```
+
+# Eventos
+En react tambien tenemos los eventos que estamos acostumbrados a usar en javascript, aqui te pongo un ejemplo de los mas comunes
+```jsx
+import React from 'react'
+
+export const EventosComponentes = () => {
+
+    const handleClick = (e, nombre) => {
+        alert("Has dado click al boton " + nombre)
+    }
+
+    const handleDoubleClick = () => {
+        alert("Has dado doble click")
+    }
+
+    const handleEnter = (e, accion) => {
+        alert(`Has ${accion} a la caja con el mouse`)
+    }
+
+    const handleFocus = e => {
+        console.log("Estas dentro del input, mete tu nombre")
+    }
+
+    const handleBlur = e => {
+        console.log("Estas fuera del input")
+    }
+
+    return (
+        <div>
+            <h1>Eventos en React</h1>
+            <p>
+                {/* Evento click */}
+                <button onClick={e => handleClick(e, "Jose")}>Dame click!</button>
+            </p>
+            <p>
+                {/* Evento doble click */}
+                <button onDoubleClick={handleDoubleClick}>Dame doble click!</button>
+            </p>
+            <div id='caja' 
+                onMouseEnter={e => handleEnter(e, "entrado")} 
+                onMouseLeave={e => handleEnter(e, "salido")}>
+                {/* Evento onMouserEnter onMouseLeave */}
+                Pasa por encima!!
+            </div>
+            <p>
+                {/* Evento onFcous onBlur */}
+                <input type='text' 
+                    onFocus={handleFocus} 
+                    onBlur={handleBlur}
+                    placeholder='introduce tu nombre' />
+            </p>
+        </div>
+    )
+}
 
 ```
-```javascript
+```jsx
 
 ```
-```javascript
+```jsx
 
 ```
-```javascript
+```jsx
 
 ```
-```javascript
+```jsx
 
 ```
-```javascript
+```jsx
 
 ```
-```javascript
+```jsx
 
 ```
-```javascript
+```jsx
 
 ```
-```javascript
+```jsx
 
 ```
-```javascript
+```jsx
 
 ```
-```javascript
+```jsx
 
 ```
-```javascript
+```jsx
 
 ```
-```javascript
+```jsx
 
 ```
-```javascript
+```jsx
 
 ```
-```javascript
+```jsx
 
 ```
-```javascript
+```jsx
 
 ```
-```javascript
+```jsx
 
 ```
-```javascript
+```jsx
 
 ```
-```javascript
+```jsx
 
 ```
-```javascript
+```jsx
 
 ```
-```javascript
+```jsx
 
 ```
-```javascript
+```jsx
 
 ```
-```javascript
+```jsx
 
 ```
-```javascript
+```jsx
 
 ```
-```javascript
+```jsx
 
 ```
-```javascript
+```jsx
 
 ```
-```javascript
+```jsx
 
 ```
-```javascript
+```jsx
 
 ```
-```javascript
+```jsx
 
 ```
-```javascript
+```jsx
 
 ```
-```javascript
+```jsx
 
 ```
-```javascript
+```jsx
 
 ```
-```javascript
+```jsx
 
 ```
-```javascript
+```jsx
 
 ```
-```javascript
+```jsx
 
 ```
-```javascript
+```jsx
 
 ```
-```javascript
+```jsx
 
 ```
-```javascript
+```jsx
 
 ```
-```javascript
+```jsx
 
 ```
-```javascript
+```jsx
 
 ```
-```javascript
+```jsx
 
 ```
-```javascript
+```jsx
 
 ```
-```javascript
+```jsx
 
 ```
-```javascript
+```jsx
 
 ```
-```javascript
+```jsx
+
+```
+```jsx
+
+```
+```jsx
+
+```
+```jsx
+
+```
+```jsx
+
+```
+```jsx
+
+```
+```jsx
+
+```
+```jsx
+
+```
+```jsx
+
+```
+```jsx
 
 ```
