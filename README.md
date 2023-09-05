@@ -10,6 +10,8 @@
 - [Comunicacion entre componentes (props, PropTypes)](#comunicacion-entre-componentes-props-proptypes)
   - [Validacion de props (PropTypes)](#validacion-de-props-proptypes)
 - [Eventos](#eventos)
+- [Hook](#hook)
+  - [Hook useState](#hook-usestate)
 
 # Extensiones para VS code y el navegador
 Podemos instalar extensiones para mejorar el funcionamienot de React en nuestro entorno de desarrollo
@@ -332,12 +334,61 @@ export const EventosComponentes = () => {
         </div>
     )
 }
-
 ```
-```jsx
 
-```
+# Hook
+Un Hook es una funcion que te permite enganchar el estado de react y te va a permitir trabajar con el ciclo de vida de los componentes (Es una funcion que cuando pasa algo hace algo)
+
+## Hook useState
+Con el useState, podremos gestionar y actualizar el estado de un componente
 ```jsx
+import React, { useState } from 'react'
+
+export const MiPrimerEstado = () => {
+
+                                // Asingmaos un valor por defecto
+    const [nombre, setNombre] = useState("Jose Almiron");
+
+        // Desde la funcion llamamos a setNombre que nos permite actualziar el estado del componente
+    const cambiarNombre = e => {
+        setNombre("Francisco");
+    }
+
+    return (
+        <div>
+            <h3>Componente: MiPrimerEstado</h3>
+            <strong className='label'>{nombre}</strong>
+            &nbsp; {/* Añade una pequeña separacion */}
+            <button onClick={cambiarNombre}>Cambiar</button>
+        </div>
+    )
+}
+```
+Aqui tenemos un ejemplo mas usando el evento onKeyUp
+```jsx
+import React, { useState } from 'react'
+
+export const MiPrimerEstado = () => {
+
+                                // Asingmaos un valor por defecto
+    const [nombre, setNombre] = useState("Jose Almiron");
+
+        // Desde la funcion llamamos a setNombre que nos permite actualziar el estado del componente
+    const cambiarNombre = (e, nombreFijo) => {
+        setNombre(nombreFijo);
+    }
+
+    return (
+        <div>
+            <h3>Componente: MiPrimerEstado</h3>
+            <strong className='label'>{nombre}</strong>
+            &nbsp; {/* Añade una pequeña separacion */}
+            <button onClick={ e => cambiarNombre(e, "Fran") }>Cambiar nombre a Fran</button>
+            &nbsp; {/* Añade una pequeña separacion */}
+            <input type='text' onKeyUp={ e => cambiarNombre(e, e.target.value) } placeholder='Cambia el nombre' />
+        </div>
+    )
+}
 
 ```
 ```jsx
