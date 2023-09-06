@@ -12,6 +12,8 @@
 - [Eventos](#eventos)
 - [Hook](#hook)
   - [Hook useState](#hook-usestate)
+  - [Hook useEffect](#hook-useeffect)
+    - [Monstar y desmonstar componentes](#monstar-y-desmonstar-componentes)
 
 # Extensiones para VS code y el navegador
 Podemos instalar extensiones para mejorar el funcionamienot de React en nuestro entorno de desarrollo
@@ -389,16 +391,113 @@ export const MiPrimerEstado = () => {
         </div>
     )
 }
-
 ```
-```jsx
 
+## Hook useEffect
+El useEffect se utiliza para detectar y responder a cambios en el estado o en las propiedades de un componente (Permite ejecutar codigo cuando ocurren modificaciones en el componente)
+```jsx
+import React, { useEffect, useState } from 'react'
+
+export const PruebasComponent = () => {
+
+    const [usuario, setUsuario] = useState("Jose Almiron");
+    const [fecha, setFecha] = useState("01-01-1998");
+    const [contador, setContador] = useState(0);
+
+    const modUsuario = e => {
+        setUsuario(e.target.value);
+    }
+
+    const cambiarFecha = e => {
+        setFecha(Date.now());
+    }
+
+        // Solo se ejecuta una vez, solo al cargar el componente
+    useEffect(() => {
+        console.log("Has cargado el componente PruebasComponent");
+    }, []);
+
+        // Se ejecuta solo se cambio el usuario
+    useEffect(() => {
+        setContador(contador + 1);
+        console.log("Has modificado el usuario: " + contador);
+    }, [fecha, usuario]);
+
+    return (
+        <div>
+            <h1>El efecto - Hook useEffect</h1>
+            <strong className={ contador >= 10 ? 'label label-green' : 'label' }>{ usuario }</strong>
+            <strong>{ fecha }</strong>
+            <p>
+                <input type='text' onChange={ modUsuario } placeholder='Cambia el nombre' />
+                <button onClick={ cambiarFecha }>Cambiar fecha</button>
+            </p>
+        </div>
+    )
+}
 ```
+### Monstar y desmonstar componentes 
+En este caso veremos como monstar y desmonstar componentes de React, y con esto veremos otro ejemplo del funcionamienot del useEffect
 ```jsx
+import React, { useEffect, useState } from 'react'
+import { AvisoComponent } from './AvisoComponent';
 
+export const PruebasComponent = () => {
+
+    const [usuario, setUsuario] = useState("Jose Almiron");
+    const [contador, setContador] = useState(0);
+
+    const modUsuario = e => {
+        setUsuario(e.target.value);
+    }
+
+        // Se ejecuta solo se cambio el usuario
+    useEffect(() => {
+        setContador(contador + 1);
+        console.log("Has modificado el usuario: " + contador);
+    }, [usuario]);
+
+    return (
+        <div>
+            <h1>El efecto - Hook useEffect</h1>
+            <strong className={ contador >= 10 ? 'label label-green' : 'label' }>{ usuario }</strong>
+            <p>
+                <input type='text' onChange={ modUsuario } placeholder='Cambia el nombre' />
+            </p>
+
+            {/* Cuando el usuario sea JOSE se cargara el componente, si se elimina del input se desmontar el componente */}
+            { usuario === "JOSE" && <AvisoComponent /> }
+        </div>
+    )
+}
 ```
+Este seria el componente que se monta y desmonta
 ```jsx
+import React, { useEffect } from 'react'
 
+export const AvisoComponent = () => {
+
+    useEffect(() => {
+        // Cuando el componente se monta
+        alert("El componente AvisoComponent esta montado");
+
+        // Cuando el componente se desmonta
+        return () => {
+            alert("COMPONENTE DESMONTADO");
+        }
+    }, []); // Se ejecuta una vez porque le paso el array vacio
+
+    return (
+        <div>
+            <hr />
+            <h3>Saludos Jose ¿Que tal estas?</h3>
+            <button onClick={e => {
+                alert("Bienvenido");
+            }}>Mostar alerta</button>
+
+        </div>
+    )
+}
 ```
 ```jsx
 
