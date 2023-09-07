@@ -14,6 +14,12 @@
   - [Hook useState](#hook-usestate)
   - [Hook useEffect](#hook-useeffect)
     - [Monstar y desmonstar componentes](#monstar-y-desmonstar-componentes)
+- [Peticiones Ajax (consultar una API)](#peticiones-ajax-consultar-una-api)
+  - [Peticiones con Fetch](#peticiones-con-fetch)
+  - [Peticiones con Async y Await](#peticiones-con-async-y-await)
+  - [Efectos de carga](#efectos-de-carga)
+  - [Capturar y mostar errores](#capturar-y-mostar-errores)
+- [Formularios](#formularios)
 
 # Extensiones para VS code y el navegador
 Podemos instalar extensiones para mejorar el funcionamienot de React en nuestro entorno de desarrollo
@@ -499,23 +505,298 @@ export const AvisoComponent = () => {
     )
 }
 ```
-```jsx
 
+# Peticiones Ajax (consultar una API)
+Vamos a ver varias maneras de hacer peticiones s una API desde react
+
+## Peticiones con Fetch
+```jsx
+import React, { useEffect, useState } from 'react'
+
+export const AjaxComponent = () => {
+
+    const [usuarios, setUsuarios] = useState([]);
+
+    const getUsuariosAjaxPms = () => {
+        fetch("https://reqres.in/api/users?page=1")
+            .then(respuesta => respuesta.json())
+            .then(
+                resultado_final => {
+                    setUsuarios(resultado_final.data);
+                    console.log(usuarios);
+                },
+                error => {
+                    console.log(error);
+                }
+            );
+    }
+
+    useEffect(() => {
+        getUsuariosAjaxPms();
+    }, []); // Para evitar que se ejecute siempre que haya un cambio en el componente, le añadimos un array vacio
+
+    return (
+        <div>
+            <h2>Listado de usuarios via Ajax</h2>
+            <ol className='usuarios'>
+                {
+                    usuarios.map(usuario => {
+                        console.log(usuario);
+                        return <li key={usuario.id}>{`${usuario.first_name} ${usuario.last_name}`}</li>
+                    })
+                }
+            </ol>
+        </div>
+    )
+}
 ```
-```jsx
 
+## Peticiones con Async y Await
+```jsx
+import React, { useEffect, useState } from 'react'
+
+export const AjaxComponent = () => {
+
+    const [usuarios, setUsuarios] = useState([]);
+
+    const getUsuariosAjazAW = async() => {
+        try {
+            const peticion = await fetch("https://reffdsaqres.in/api/users345?page=1");
+            const {data} = await peticion.json();        
+
+            setUsuarios(data);
+        } catch (error) {
+            console.log(error.message);
+        }
+    }
+
+
+    useEffect(() => {
+        getUsuariosAjazAW();
+    }, []); // Para evitar que se ejecute siempre que haya un cambio en el componente, le añadimos un array vacio
+
+    return (
+        <div>
+            <h2>Listado de usuarios via Ajax</h2>
+            <ol className='usuarios'>
+                {
+                    usuarios.map(usuario => {
+                        console.log(usuario);
+                        return <li key={usuario.id}>{`${usuario.first_name} ${usuario.last_name}`}</li>
+                    })
+                }
+            </ol>
+        </div>
+    )
+}
 ```
-```jsx
 
+## Efectos de carga
+Para el efecto seria tan sencillo como crear un useState, para controlar cuando mostarlo y cuando no, y tener un condicional en el return. En este caso he puesto solo un texto pero podria ponerse una animacion
+```jsx
+/* eslint-disable jsx-a11y/alt-text */
+import React, { useEffect, useState } from 'react'
+
+export const AjaxComponent = () => {
+
+    const [usuarios, setUsuarios] = useState([]);
+    const [loading, setLoading] = useState(true);
+
+    const getUsuariosAjazAW = () => {
+        // Le podemos poner tamibien un diley a la peticion
+        setTimeout(async() => {
+            const peticion = await fetch("https://reqres.in/api/users?page=1");
+            const {data} = await peticion.json();
+    
+            setUsuarios(data);
+            setLoading(false);
+        }, 2000);
+    }
+
+    useEffect(() => {
+        getUsuariosAjazAW();
+    }, []); // Para evitar que se ejecute siempre que haya un cambio en el componente, le añadimos un array vacio
+
+
+    if (loading === true) {
+        return (
+            <div className='cargando'>Cargando datos...</div>
+        )
+    } else {
+            // Cuando todo va bine
+        return (
+            <div>
+                <h2>Listado de usuarios via Ajax</h2>
+                <ol className='usuarios'>
+                    {
+                        usuarios.map(usuario => {
+                            return (
+                                <li key={usuario.id}>
+                                    <img src={ usuario.avatar } width="20" />
+                                    &nbsp;
+                                    {`${usuario.first_name} ${usuario.last_name}`}
+                                </li>
+                            );
+                        })
+                    }
+                </ol>
+            </div>
+        )
+    }
+
+}
 ```
-```jsx
 
+## Capturar y mostar errores
+```jsx
+/* eslint-disable jsx-a11y/alt-text */
+import React, { useEffect, useState } from 'react'
+
+export const AjaxComponent = () => {
+
+    const [usuarios, setUsuarios] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState('');
+
+    const getUsuariosAjazAW = () => {
+        setTimeout(async() => {
+            try {
+                const peticion = await fetch("https://reffdsaqres.in/api/users345?page=1");
+                const {data} = await peticion.json();
+        
+                setUsuarios(data);
+                setLoading(false);
+            } catch (error) {
+                console.log(error.message);
+                setError(error.message);
+            }
+        }, 2000);
+    }
+
+    useEffect(() => {
+        getUsuariosAjazAW();
+    }, []); // Para evitar que se ejecute siempre que haya un cambio en el componente, le añadimos un array vacio
+
+
+    if (error !== "") {
+            // Cuando algun error
+        return (
+            <div className='errores'>{ error }</div>
+        )
+    } else if (loading === true) {
+            // Cuando esta todo cargando
+        return (
+            <div className='cargando'>Cargando datos...</div>
+        )
+    } else if (loading === false && error === "") {
+            // Cuando todo va bine
+        return (
+            <div>
+                <h2>Listado de usuarios via Ajax</h2>
+                <ol className='usuarios'>
+                    {
+                        usuarios.map(usuario => {
+                            return (
+                                <li key={usuario.id}>
+                                    <img src={ usuario.avatar } width="20" />
+                                    &nbsp;
+                                    {`${usuario.first_name} ${usuario.last_name}`}
+                                </li>
+                            );
+                        })
+                    }
+                </ol>
+            </div>
+        )
+    }
+
+}
 ```
-```jsx
 
+# Formularios
+Con el evento onSubmit podemos enviar datos de un formulario y almacenarlos en un estado
+```jsx
+import React, { useState } from 'react'
+
+export const FormularioComponent = () => {
+
+    const [usuario, setUsuario] = useState({});
+
+    const conseguirDatosFormulario = e => {
+        e.preventDefault();
+
+        let datos = e.target;
+        let usuario = {
+            nombre: datos.nombre.value,
+            apellidos: datos.apellidos.value,
+            genero: datos.genero.value,
+            bio: datos.biografia.value
+        }
+        setUsuario(usuario);
+    }
+
+    return (
+        <div>
+            <h1>Formularios en Reac</h1>
+
+            { usuario.bio && usuario.bio.length >= 1 && (
+                <div className='info_usuario label label-gray'>
+                    { usuario.nombre } { usuario.apellidos } es un { usuario.genero } y su biografia es esta: <p>{ usuario.bio }</p>
+                </div>
+            )}
+
+            <form onSubmit={ conseguirDatosFormulario }>
+                <input type='text' placeholder='Nombre' name='nombre' />
+                <input type='text' placeholder='Apellidos' name='apellidos' />
+                <select name='genero'>
+                    <option value="hombre">Hombre</option>
+                    <option value="mujer">Mujer</option>
+                </select>
+                <textarea placeholder='biografia' name='biografia'></textarea>
+
+                <input type='submit' value="Enviar" />
+            </form>
+        </div>
+    )
+}
 ```
+Sigueineod el ejemplo anterior, podemos hacer que si se modifican los datos del fromulario estos se actualicen de forma dinamica, con un onChange en cada input 
 ```jsx
+    // De esta forma podemos hacer que al modificar un campo del formulario su estado se actualice automaticamanete
+    const cambiarDatos = e => {
+        let name_del_input = e.target.name;
 
+        setUsuario(estado_previo => {
+            return {
+                ...estado_previo, 
+                [name_del_input]: e.target.value 
+            }
+        });
+    }
+
+    return (
+        <div>
+            <h1>Formularios en Reac</h1>
+
+            { usuario.bio && usuario.bio.length >= 1 && (
+                <div className='info_usuario label label-gray'>
+                    { usuario.nombre } { usuario.apellidos } es un { usuario.genero } y su biografia es esta: <p>{ usuario.bio }</p>
+                </div>
+            )}
+
+            <form onSubmit={ conseguirDatosFormulario }>
+                <input type='text' placeholder='Nombre' name='nombre' onChange={ cambiarDatos } />
+                <input type='text' placeholder='Apellidos' name='apellidos' onChange={ cambiarDatos } />
+                <select name='genero' onChange={ cambiarDatos }>
+                    <option value="hombre">Hombre</option>
+                    <option value="mujer">Mujer</option>
+                </select>
+                <textarea placeholder='biografia' name='bio' onChange={ cambiarDatos }></textarea>
+
+                <input type='submit' value="Enviar" />
+            </form>
+        </div>
+    )
 ```
 ```jsx
 
