@@ -20,6 +20,7 @@
   - [Efectos de carga](#efectos-de-carga)
   - [Capturar y mostar errores](#capturar-y-mostar-errores)
 - [Formularios](#formularios)
+- [Helpers](#helpers)
 
 # Extensiones para VS code y el navegador
 Podemos instalar extensiones para mejorar el funcionamienot de React en nuestro entorno de desarrollo
@@ -798,11 +799,36 @@ Sigueineod el ejemplo anterior, podemos hacer que si se modifican los datos del 
         </div>
     )
 ```
-```jsx
 
+# Helpers
+Los "helpers" en React son funciones o servicios que se pueden reutilizar en distintos componentes para evitar la repeticion de codigo y mejorar la modularidad de la aplicacion. Estas funciones auxiliares encapsulan logica común o tareas específicas para hacer que el codigo sea mas limpio y mantenible  
+Para trabajar con ellos creamos un nuevo directorio en src, llamado helpers, y un ejemplo de una funcionalidad que puede ser reutilizable es la gestion del localStorage
+```jsx
+export const guardarEnStorage = (key, item) => {
+    // Conseguir los elementos que ya tenemos en el localStorage
+    let items = JSON.parse(localStorage.getItem(key));
+
+    // Comprobar si es un array
+    if (Array.isArray(items)) {
+        // Añadir dentro del array un elemento nuevo
+        items.push(item);
+    } else {
+        // Crear un array con el nuevo elemento
+        items = [item];
+    }
+
+    // Guardar en el localStorage
+    localStorage.setItem(key, JSON.stringify(items));
+
+    // Devolver objeto guardado
+    return item;
+}
 ```
+Para usar la funcionalidad solo tendremos que llamar al helper y este se importara automaticmanete
 ```jsx
+import { guardarEnStorage } from '../helpers/GuardarEnStorage';
 
+guardarEnStorage("pelis", peli);
 ```
 ```jsx
 
