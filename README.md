@@ -21,6 +21,13 @@
   - [Capturar y mostar errores](#capturar-y-mostar-errores)
 - [Formularios](#formularios)
 - [Helpers](#helpers)
+- [React Router DOM](#react-router-dom)
+  - [isActive](#isactive)
+  - [Enlaces SPA (fuera de un menu)](#enlaces-spa-fuera-de-un-menu)
+  - [Parametros en las rutas - useParams](#parametros-en-las-rutas---useparams)
+  - [Redireccionar - navigate](#redireccionar---navigate)
+  - [Redireccionar - useNavigate](#redirecciones---usenavigate)
+  - [Subrutas y rutas anidadas](#subrutas-y-rutas-anidadas)
 
 # Extensiones para VS code y el navegador
 Podemos instalar extensiones para mejorar el funcionamienot de React en nuestro entorno de desarrollo
@@ -830,46 +837,286 @@ import { guardarEnStorage } from '../helpers/GuardarEnStorage';
 
 guardarEnStorage("pelis", peli);
 ```
-```jsx
 
-```
+# React Router DOM
+Lo primero que tenemos que hace es instalar el paquete de react router dom, con el siguiente comando en consola
 ```jsx
+npm install react-router-dom
+```
+A la hora de trabajar con rutas en react, tendremos el directorio de "components", y otro directorio llamado "routers", en este nuevo directorio crearemos el componente que se encargara de gestionar las rutas
+```jsx
+import React from 'react'
+import { Routes, Route, NavLink, BrowserRouter } from 'react-router-dom';
+import { Inicio } from '../components/Inicio';
+import { Contacto } from '../components/Contacto';
+import { Articulos } from '../components/Articulos';
+import { Error } from '../components/Error';
 
-```
-```jsx
+export const RouterPrincipal = () => {
+    return (
+        <BrowserRouter>
+            <nav>
+                <ul>
+                    <li><NavLink to="/inicio">Inicio</NavLink></li>
+                    <li><NavLink to="/contacto">Contacto</NavLink></li>
+                    <li><NavLink to="/articulos">Articulos</NavLink></li>
+                </ul>
+            </nav>
+            <hr />
 
+            <section className='contenido_principal'>
+                {/* Cargar componentes */}
+                {/* Aqui se carga el componente que coincida con el path */}
+                <Routes>
+                    <Route path="/" element={<Inicio />} />
+                    <Route path="/inicio" element={<Inicio />} />
+                    <Route path="/contacto" element={<Contacto />} />
+                    <Route path="/articulos" element={<Articulos />} />
+                    <Route path='*' element={<Error />} />
+                </Routes>
+            </section>
+        </BrowserRouter>
+    )
+}
 ```
+Y lo llamaremos desde el App
 ```jsx
+import './App.css';
+import { RouterPrincipal } from './routers/RouterPrincipal';
 
-```
-```jsx
+function App() {
+  return (
+    <RouterPrincipal />
+  );
+}
 
+export default App;
 ```
-```jsx
 
-```
+## isActive
+Si queremos ponerle algun estilo CSS en el menu al enlace que corresponda al componennte donde nos encontramos, podemos usar el "isActive" y con una funcion de collback añadirle una clase
 ```jsx
+<nav>
+    <ul>
+        <li><NavLink to="/inicio" className={({isActive}) => isActive ? "activado" : ""}>Inicio</NavLink></li>
+        <li><NavLink to="/contacto" className={({isActive}) => isActive ? "activado" : ""}>Contacto</NavLink></li>
+        <li><NavLink to="/articulos" className={({isActive}) => isActive ? "activado" : ""}>Articulos</NavLink></li>
+    </ul>
+</nav>
+```
 
-```
+## Enlaces SPA (fuera de un menu)
+Estos enlaces pueden ser interesantes, por ejemplo en la pagina de error para volver a la pagina principla, se usa cuando solo se necesita un enlace
 ```jsx
+import React from 'react'
+import { Link } from 'react-router-dom'
 
+export const Error = () => {
+  return (
+    <div>
+        <h1>Error 404</h1>
+        <p>Esta es la pagina de error</p>
+        <Link to="/">Volver al inicio</Link>
+    </div>
+  )
+}
 ```
-```jsx
 
-```
+## Parametros en las rutas - useParams
+Podemos mandar parametros por medio de unan url, gracias al Hook useParams
 ```jsx
+<BrowserRouter>
+        {/* Cargar componentes */}
+        {/* Aqui se carga el componente que coincida con el path */}
+        <Routes>
+            <Route path="/" element={<Inicio />} />
+            <Route path="/inicio" element={<Inicio />} />
+            <Route path="/contacto" element={<Contacto />} />
+            <Route path="/articulos" element={<Articulos />} />
+            {/* De esta forma podemos mandar parametros */}
+            <Route path="/personas/:nombre" element={<Personas />} />
+            <Route path='*' element={<Error />} />
+        </Routes>
+</BrowserRouter>
+```
+Y desde el componente podemos llamarlo gracias al useParams
+```jsx
+import React from 'react'
+import { useParams } from 'react-router-dom'
+export const Personas = () => {
 
-```
-```jsx
+    const { nombre } = useParams();
 
+    return (
+        <div>
+            <h1>Pagina de Personas: { nombre }</h1>
+            <p>Esta es la pagina de personas</p>
+        </div>
+    )
+}
 ```
+Estos parametros son obligatorios, si queremos que sean opcionales tendremos que duplicar las rutas sin esos parametros
 ```jsx
+<BrowserRouter>
+        {/* Cargar componentes */}
+        {/* Aqui se carga el componente que coincida con el path */}
+        <Routes>
+            <Route path="/" element={<Inicio />} />
+            <Route path="/inicio" element={<Inicio />} />
+            <Route path="/contacto" element={<Contacto />} />
+            <Route path="/articulos" element={<Articulos />} />
+            {/* De esta forma podemos mandar parametros */}
+            <Route path="/personas/:nombre/:apellido" element={<Personas />} />
+            <Route path="/personas/:nombre" element={<Personas />} />
+            <Route path="/personas" element={<Personas />} />
+            <Route path='*' element={<Error />} />
+        </Routes>
+</BrowserRouter>
+```
+De esta forma ya no seran obligatorios los parametros y ya no nos mostrara la pagina de 404 en caso de que no tengan ningun valor esos parametros, tambien podemos añadirles valores por defecto
+```jsx
+import React from 'react'
+import { useParams } from 'react-router-dom'
+export const Personas = () => {
 
-```
-```jsx
+    let { nombre = '"usuario"', apellido='"apellido"' } = useParams();
 
+    return (
+        <div>
+            <h1>Pagina de Personas: { nombre} { apellido }</h1>
+            <p>Esta es la pagina de personas</p>
+        </div>
+    )
+}
 ```
+Otra forma de hacerlo es con un condicional
 ```jsx
+import React from 'react'
+import { useParams } from 'react-router-dom'
+export const Personas = () => {
+
+    // Valores por defecto en parametros opcionales
+    // let { nombre = '"usuario"', apellido='"apellido"' } = useParams();
+
+    const { nombre, apellido } = useParams();
+
+    return (
+        <div>
+            {!nombre && <h1>No hay ninguna persona que mostrar</h1>}
+            {nombre && (
+                <>
+                    <h1>Pagina de Personas: { nombre} { apellido }</h1>
+                    <p>Esta es la pagina de personas</p>
+                </>
+            )}
+        </div>
+    )
+}
+```
+
+## Redireccionar - Navigate
+Para hacer redirecciones a otras rutas, usamos el componente "Navigate"
+```jsx
+<Route path="/redirigir" element={<Navigate to="/personas/Jose/Almiron"/>} />
+```
+
+## Redirecciones - useNavigate
+Tambien podemos usar el Hokk useNavigate para hacer redirecciones
+```jsx
+import React from 'react'
+import { useNavigate, useParams } from 'react-router-dom'
+export const Personas = () => {
+
+    // Valores por defecto en parametros opcionales
+    // let { nombre = '"usuario"', apellido='"apellido"' } = useParams();
+
+    const { nombre, apellido } = useParams();
+    const navegar = useNavigate();
+
+    const enviar = e => {
+        e.preventDefault();
+        let nombre = e.target.nombre.value;
+        let apellido = e.target.apellido.value;
+        let url = `/personas/${nombre}/${apellido}`;
+
+        if (nombre.length <= 0 && apellido.length <= 0) {
+            navegar("/inicio");
+        } else if (nombre === "contacto") {
+            navegar("/contacto");
+        } else {
+            navegar(url);
+        }
+        
+    }
+
+    return (
+        <div>
+            {!nombre && <h1>No hay ninguna persona que mostrar</h1>}
+            {nombre && <h1>Pagina de Personas: {nombre} {apellido}</h1>}
+
+            <p>Esta es la pagina de personas</p>
+
+            <form onSubmit={ enviar }>
+                <input type="text" name="nombre" />
+                <input type="text" name="apellido" />
+                <input type="submit" name="enviar" value="Enviar" />
+            </form>
+        </div>
+    )
+}
+```
+
+## Subrutas y rutas anidadas
+Para poder realizar subrutas cambiaremos el enlace que las contiene de esta forma
+```jsx
+<BrowserRouter>
+    {/* Cargar componentes */}
+    {/* Aqui se carga el componente que coincida con el path */}
+    <Routes>
+        <Route path="/" element={<Inicio />} />
+        <Route path="/inicio" element={<Inicio />} />
+        <Route path="/contacto" element={<Contacto />} />
+        <Route path="/articulos" element={<Articulos />} />
+        {/* De esta forma podemos mandar parametros */}
+        <Route path="/personas/:nombre" element={<Personas />} />
+        De esta forma estamos especificando que panel tendra mas rutas
+        <Route path="/panel/*" element={<PanelControl />}>
+            <Route index element={<InicioPanel />} />
+            <Route path='inicio' element={<InicioPanel />} />
+            <Route path='crear-articulos' element={<Crear />} />
+            <Route path='gestion-usuarios' element={<Gestion />} />
+            <Route path='acerca-de' element={<Acerca />} />
+        </Route>
+        <Route path='*' element={<Error />} />
+    </Routes>
+</BrowserRouter>
+```
+Y desde el componente que nos hemos creado para almacenar las subrutas en este caso panel de control, llamaremos al componente "Outlet" con el que podremos llamar a los componentes
+```jsx
+import React from 'react'
+import { NavLink, Outlet } from 'react-router-dom'
+
+export const PanelControl = () => {
+  return (
+    <div>
+        <h1>Panel de control</h1>
+        <p>Elige una de estas opciones</p>
+        <nav>
+            <ol>
+                <li><NavLink to='/panel/inicio'>Inicio</NavLink></li>
+                <li><NavLink to='/panel/crear-articulos'>Crear articulos</NavLink></li>
+                <li><NavLink to='/panel/gestion-usuarios'>Gestion de usuarios</NavLink></li>
+                <li><NavLink to='/panel/acerca-de'>Acerca de</NavLink></li>
+            </ol>
+        </nav>
+
+        <div>
+            {/* Quiero cargar aqui los componentes de las subrutas */}
+            <Outlet />
+        </div>
+    </div>
+  )
+}
 
 ```
 ```jsx
