@@ -1,9 +1,9 @@
-# Proyecto 1 - API de peliculas
-![Proyecto1](public/proyecto1.png)
+# Proyecto 2 - Portafolio
+![Proyecto2](public/images/proyecto2.png)
 
 # Getting Started with Create React App
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app)
+This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
 

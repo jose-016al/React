@@ -843,7 +843,7 @@ Lo primero que tenemos que hace es instalar el paquete de react router dom, con 
 ```jsx
 npm install react-router-dom
 ```
-A la hora de trabajar con rutas en react, tendremos el directorio de "components", y otro directorio llamado "routers", en este nuevo directorio crearemos el componente que se encargara de gestionar las rutas
+A la hora de trabajar con rutas en react, tendremos el directorio de "components", y otro directorio llamado "router", en este nuevo directorio crearemos el componente que se encargara de gestionar las rutas
 ```jsx
 import React from 'react'
 import { Routes, Route, NavLink, BrowserRouter } from 'react-router-dom';
