@@ -15,6 +15,8 @@
   - [Hook useEffect](#hook-useeffect)
     - [Monstar y desmonstar componentes](#monstar-y-desmonstar-componentes)
   - [Hook useRef](#hook-useref)
+  - [Hook useLayoutEffect](#hook-uselayouteffect)
+  - [Hook useReducer](#hook-usereducer)
 - [Peticiones Ajax (consultar una API)](#peticiones-ajax-consultar-una-api)
   - [Peticiones con Fetch](#peticiones-con-fetch)
   - [Peticiones con Async y Await](#peticiones-con-async-y-await)
@@ -29,6 +31,10 @@
   - [Redireccionar - navigate](#redireccionar---navigate)
   - [Redireccionar - useNavigate](#redirecciones---usenavigate)
   - [Subrutas y rutas anidadas](#subrutas-y-rutas-anidadas)
+- [Memorizacion en react](#memorizacion-en-react)
+  - [React.memo](#reactmemo)
+  - [Hook useMemo](#hook-usememo)
+  - [Hook useCallback](#hook-usecallback)
 
 # Extensiones para VS code y el navegador
 Podemos instalar extensiones para mejorar el funcionamienot de React en nuestro entorno de desarrollo
@@ -563,6 +569,119 @@ export const Formulario = () => {
 
 ```
 
+## Hook useLayoutEffect
+Es practicamnete el mismo metodo que el useEffect, pero con la diferencia se ejecuta de manera asincrona despues de hacer todas las renderizaciones en el DOM
+
+## Hook useReducer
+Es una hook que se utiliza para gestionar el estado de un componente de una manera mas organizada y controlada que el hook "useState"  
+```jsx
+export const JuegoReducer = (state = [], action) => {
+
+    switch (action.type) {
+        case "crear":
+            return [...state, action.payload];
+        case "borrar":
+            return state.filter(juego => juego.id !== action.payload);
+        case "editar":
+            let indice = state.findIndex(juego => juego.id === action.payload.id);
+            state[indice] = action.payload;
+            return [...state];
+        default:
+            return state;
+    }
+
+}
+```
+```jsx
+import React, { useEffect, useReducer } from 'react'
+import { JuegoReducer } from '../reducers/JuegoReducer';
+
+const init = () => {
+    return JSON.parse(localStorage.getItem('juegos')) || [];
+}
+
+export const MisJuegos = () => {
+
+    const [juegos, dispatch] = useReducer(JuegoReducer, [], init);
+
+    useEffect(() => {
+        localStorage.setItem('juegos', JSON.stringify(juegos));
+    }, [juegos]);
+
+    const conseguirDatosForm = e => {
+        e.preventDefault();
+
+        let juego = {
+            id: new Date().getTime(),
+            titulo: e.target.titulo.value,
+            descripcion: e.target.descripcion.value
+        };
+
+        const action = {
+            type: 'crear',
+            payload: juego
+        };
+
+        dispatch(action);
+    }
+
+    const borrar = id => {
+        const action = {
+            type: 'borrar',
+            payload: id
+        };
+
+        dispatch(action);
+    }
+
+    const editar = (e, id) => {
+        let juego = {
+            id,
+            titulo: e.target.value,
+            descripcion: e.target.value
+        };
+
+        const action = {
+            type: 'editar',
+            payload: juego
+        };
+
+        dispatch(action);
+    }
+
+    return (
+        <div>
+            <h1>Estos son mis videojuegos</h1>
+
+            <p>Numero de videojuegos: { juegos.length }</p>
+
+            <ul className='lista'>
+                {
+                    juegos.map(juego => (
+                        <li key={juego.id}>
+                            { juego.titulo }
+                            &nbsp;
+                            <button onClick={e => borrar(juego.id)}>X</button>
+                            &nbsp;
+                            <input type='text' onBlur={e => editar(e, juego.id)} />
+                        </li>
+                    ))
+                }
+            </ul>
+
+            <h3>Agregar juego</h3>
+
+            <form onSubmit={conseguirDatosForm}>
+                <input type='text' name='titulo' placeholder='Titulo' />
+                <textarea name='descripcion' placeholder='Descripcion' />
+                <input type='submit' value='Guardar' />
+            </form>
+        </div>
+    )
+}
+
+```
+
 # Peticiones Ajax (consultar una API)
 Vamos a ver varias maneras de hacer peticiones s una API desde react
 
@@ -975,17 +1094,17 @@ export const Error = () => {
 Podemos mandar parametros por medio de unan url, gracias al Hook useParams
 ```jsx
 <BrowserRouter>
-        {/* Cargar componentes */}
-        {/* Aqui se carga el componente que coincida con el path */}
-        <Routes>
-            <Route path="/" element={<Inicio />} />
-            <Route path="/inicio" element={<Inicio />} />
-            <Route path="/contacto" element={<Contacto />} />
-            <Route path="/articulos" element={<Articulos />} />
-            {/* De esta forma podemos mandar parametros */}
-            <Route path="/personas/:nombre" element={<Personas />} />
-            <Route path='*' element={<Error />} />
-        </Routes>
+    {/* Cargar componentes */}
+    {/* Aqui se carga el componente que coincida con el path */}
+    <Routes>
+        <Route path="/" element={<Inicio />} />
+        <Route path="/inicio" element={<Inicio />} />
+        <Route path="/contacto" element={<Contacto />} />
+        <Route path="/articulos" element={<Articulos />} />
+        {/* De esta forma podemos mandar parametros */}
+        <Route path="/personas/:nombre" element={<Personas />} />
+        <Route path='*' element={<Error />} />
+    </Routes>
 </BrowserRouter>
 ```
 Y desde el componente podemos llamarlo gracias al useParams
@@ -1007,19 +1126,19 @@ export const Personas = () => {
 Estos parametros son obligatorios, si queremos que sean opcionales tendremos que duplicar las rutas sin esos parametros
 ```jsx
 <BrowserRouter>
-        {/* Cargar componentes */}
-        {/* Aqui se carga el componente que coincida con el path */}
-        <Routes>
-            <Route path="/" element={<Inicio />} />
-            <Route path="/inicio" element={<Inicio />} />
-            <Route path="/contacto" element={<Contacto />} />
-            <Route path="/articulos" element={<Articulos />} />
-            {/* De esta forma podemos mandar parametros */}
-            <Route path="/personas/:nombre/:apellido" element={<Personas />} />
-            <Route path="/personas/:nombre" element={<Personas />} />
-            <Route path="/personas" element={<Personas />} />
-            <Route path='*' element={<Error />} />
-        </Routes>
+    {/* Cargar componentes */}
+    {/* Aqui se carga el componente que coincida con el path */}
+    <Routes>
+        <Route path="/" element={<Inicio />} />
+        <Route path="/inicio" element={<Inicio />} />
+        <Route path="/contacto" element={<Contacto />} />
+        <Route path="/articulos" element={<Articulos />} />
+        {/* De esta forma podemos mandar parametros */}
+        <Route path="/personas/:nombre/:apellido" element={<Personas />} />
+        <Route path="/personas/:nombre" element={<Personas />} />
+        <Route path="/personas" element={<Personas />} />
+        <Route path='*' element={<Error />} />
+    </Routes>
 </BrowserRouter>
 ```
 De esta forma ya no seran obligatorios los parametros y ya no nos mostrara la pagina de 404 en caso de que no tengan ningun valor esos parametros, tambien podemos añadirles valores por defecto
@@ -1167,17 +1286,152 @@ export const PanelControl = () => {
   )
 }
 ```
+
+# Memorizacion en react 
+Es una funcion de optimizacion en React que se utiliza para memorizar el resultado de un componente funcional. Su objetivo principal es evitar la renderizacion innecesaria de un componente cuando sus props no han cambiado.  
+
+## React.memo
 ```jsx
+import React, { useEffect, useState } from 'react'
+
+export const Empleados = React.memo(({ pagina }) => {
+
+    const [empleados, setEmpleados] = useState([]);
+
+    useEffect(() => {
+        getEmpleados(pagina);
+    }, [pagina]);
+
+    const getEmpleados = async(pagina) => {
+        try {
+            const peticion = await fetch(`https://reqres.in/api/users?page=${pagina}`);
+            const {data} = await peticion.json();        
+
+            setEmpleados(data);
+        } catch (error) {
+            console.log(error.message);
+        }
+    }
+
+    return (
+        <div>
+            <p>Mostando pagina: { pagina }</p>
+            <ol className='usuarios'>
+                {
+                    empleados.map(empleado => {
+                        return <li key={empleado.id}>{`${empleado.first_name} ${empleado.last_name}`}</li>
+                    })
+                }
+            </ol>
+        </div>
+    )
+});
+```
+Con este ejemplo vemos que la lista de empleados, solo se renderizara cuando haya algun cambio, como que cambie la props pagina
+```jsx
+import React, { useEffect, useState } from 'react'
+import { Empleados } from './Empleados'
+
+export const Gestion = () => {
+
+    const [nombre, seNombre] = useState('');
+    const [pagina, setPagina] = useState(1);
+
+    const asignarGestor = e => {
+        seNombre(e.target.value);
+    }
+
+    return (
+        <div>
+            <h1>Nombre del gestor: { nombre }</h1>
+
+            <h2>Listado de empleados</h2>
+            <input type='text' onChange={asignarGestor} placeholder='Nombre del gestor' />
+            <p>Los usuarios son gestionados por: { nombre } vienen de jsonplaceHolder...</p>
+            <button onClick={ () => setPagina(1) }>Pagina 1</button> 
+            <button onClick={ () => setPagina(2) }>Pagina 2</button>
+            {/* si pagina no cambia el componente solo se renderizara al cargar el componente */}
+            <Empleados pagina={pagina} />
+        </div>
+    )
+}
+```
+
+## Hook useMemo
+En el caso de que tengamos una funcion que puede tardar, por que tiene muchos datos que porcesar, en vez de evitar que se renderize el componente una sola vez, podemos usar el hook usememo que nos permite hacer lo mismo pero en funciones
+```jsx
+import React, { useMemo, useState } from 'react'
+
+export const Tareas = () => {
+
+    const [tareas, setTareas] = useState([]);
+    const [contador, setContador] = useState(30);
+
+    const guardarTareas = e => {
+        e.preventDefault();
+        setTareas([...tareas, e.target.descripcion.value]);
+        e.target.descripcion.value = '';
+    }
+
+    const borrar = id => {
+        /* Filtar las tareas para eliminar la que nno quiero */
+        let nuevas_tareas = tareas.filter((tarea, index) => index !== id);
+        /* Set State, guardar el nuevo listado de tareas en el estado */
+        setTareas(nuevas_tareas);
+    }
+
+    const sumar = () => {
+        setContador(contador + 1);
+    }
+
+    const contadoresPasados = (acumulacion) => {
+        for (let i = 0; i <= acumulacion; i++) {
+            console.log("Ejecutando acumulacion de contadores del pasado...");
+        }
+        return `Contador manual de tareas: ${ contador }`;
+    }
+
+    /* De esta manera la funcion se ejecutara solo al cargar el componente, y cuando haya cambios en el contador */
+    /* pero no le afectara el resto de tareas como añador o eliminar una tarea */
+    const memoContadores = useMemo(() => contadoresPasados(contador), [contador]);
+
+    return (
+        <div className='tareas-container'>
+            <h1>Mis tareas</h1>
+            <form onSubmit={guardarTareas}>
+                <input type='text' name='descripcion' placeholder='describe la tarea' />
+                <input type='submit' value='Agregar' />
+            </form>
+
+            <h3>{ memoContadores }</h3>
+            <button onClick={sumar}>Sumar</button>
+
+            <h3>Listado de tareas</h3>
+            <ul>
+                {
+                    tareas.map((tarea, index) => {
+                        return (
+                            <li key={index}>
+                                {tarea}
+                                &nbsp;
+                                <button onClick={ () => borrar(index) }>X</button>
+                            </li>
+                        );
+                    })
+                }
+            </ul>
+        </div>
+    )
+}
 
 ```
-```jsx
 
-```
+## Hook useCallback
+con useCallbak tambine podremos hacer algo similar al usermemo, esta funcion solo se renderizara una vez o cuando haya alguna moidifcacion en pagina
 ```jsx
-
-```
-```jsx
-
+const mostarMensaje = useCallback(() => {
+    console.log("Hola que tal soy un mensaje desde el componente Empleados!!");
+}, [pagina]);
 ```
 ```jsx
 
