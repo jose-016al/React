@@ -66,6 +66,27 @@ Podemos iniciar el proyecto
 npm start
 ```
 
+## Creacion de un proyecto con Vite
+```bash
+npm create vite@latest
+```
+Con esto nos ejecuta el siguiente script  
+![ViteInstall](.img/viteinstall.png)
+Una vez tengamos el proyecto listo accedemos a el e instalamos las dependencias
+```bash
+npm install
+```
+Para su ejecucion
+```bash
+npm run dev
+```
+```bash
+
+```
+```bash
+
+```
+
 # Componentes 
 Un componente es una parte de la aplicacion, para ello creamos un directorio en src, donde almacenaremos los componentes que vayamos creando, lo podemos llamar componentes, y dentro de el creamos un archivo en, en mi caso lo llamare MiComponete.js (Debe ir en mayuscula siempre)
 ```jsx
