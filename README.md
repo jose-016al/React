@@ -17,6 +17,10 @@
   - [Hook useRef](#hook-useref)
   - [Hook useLayoutEffect](#hook-uselayouteffect)
   - [Hook useReducer](#hook-usereducer)
+  - [Hook useID](#hook-useid)
+  - [Hook personalizados](#hook-personalizados)
+    - [Hook personalizados para serializar Formularios](#hook-personalizado-para-serializar-formularios)
+    - [Hook personalizados para peticiones con Ajax](#hook-personalizados-para-peticiones-con-ajax)
 - [Peticiones Ajax (consultar una API)](#peticiones-ajax-consultar-una-api)
   - [Peticiones con Fetch](#peticiones-con-fetch)
   - [Peticiones con Async y Await](#peticiones-con-async-y-await)
@@ -35,6 +39,9 @@
   - [React.memo](#reactmemo)
   - [Hook useMemo](#hook-usememo)
   - [Hook useCallback](#hook-usecallback)
+- [Context](#context)
+  - [Login con Context](#login-con-context)
+
 
 # Extensiones para VS code y el navegador
 Podemos instalar extensiones para mejorar el funcionamienot de React en nuestro entorno de desarrollo
@@ -43,7 +50,6 @@ Podemos instalar extensiones para mejorar el funcionamienot de React en nuestro 
 
 # Listado de atajos con la extension VS code
   - rafc => Creacion de la estrucutra basica de un componente
-
 
 # Creacion de un proyecto
 Para poder trabajar con React, dependemos de noje.js asi que tendremos que instalarlo.   
@@ -676,6 +682,214 @@ export const MisJuegos = () => {
                 <textarea name='descripcion' placeholder='Descripcion' />
                 <input type='submit' value='Guardar' />
             </form>
+        </div>
+    )
+}
+
+```
+
+## Hook useID
+Con useID podemos generar identificadores unicos
+```jsx
+import React, { useId } from 'react'
+
+export const MiComponente = () => {
+
+  const id = useId();
+
+  return (
+    <div>
+      <h1>Hook useID</h1>
+      <p>El id generado es: "{id}"</p>
+    </div>
+  )
+}
+
+```
+
+## Hook personalizados 
+Podemos crear nuestros propios hooks personalizados y de esta forma evitar repetir mismas funciones en distintos componentes, este seria un ejemplo de como funciona
+```jsx
+import { useState } from "react";
+
+export const useMayus = (texto) => {
+
+    const [miTexto, setMiTexto] = useState(texto);
+
+    const mayusculas = () => {
+        return setMiTexto(texto.toUpperCase());
+    }
+
+    const minusculas = () => {
+        return setMiTexto(texto.toLowerCase());
+    }
+
+    const add = (added) => {
+        return setMiTexto(texto += added);
+    }
+
+    return {
+        estado: miTexto,
+        mayusculas,
+        minusculas,
+        add
+    };
+}
+```
+```jsx
+import React from 'react';
+import { useMayus } from '../hooks/useMayus'
+
+export const PruebasCustom = () => {
+    
+
+    const { estado, mayusculas, minusculas, add } = useMayus("Jose Almiron");
+
+    return (
+        <div>
+            <h1>Probando componentes personalizados</h1>
+            <h2>{estado}</h2>
+            &nbsp;
+            <button onClick={mayusculas}>Mayusculas</button>
+            &nbsp;
+            <button onClick={minusculas}>Minusculas</button>
+            &nbsp;
+            <button onClick={e => add(" - Probando hooks personalizados")}>Añadir</button>
+        </div>
+    )
+}
+
+```
+
+### Hook personalizado para serializar formularios
+Este hook lo podemos llamar useForm y nos puede ayudar a la hora de trabajar con formularios
+```jsx
+import { useState } from "react";
+
+export const useForm = (objetoInicial = {}) => {
+
+    const [formulario, setFormulario] = useState(objetoInicial);
+
+    const serializarFormulario = (formulario) => {
+        const formData = new FormData(formulario);
+
+        const objetoCompleto = {};
+
+        for (let [name, value] of formData) {
+            objetoCompleto[name] = value;
+        }
+        return objetoCompleto;
+    }
+
+    const enviado = (e) => {
+        e.preventDefault();
+        let curso = serializarFormulario(e.target);
+        setFormulario(curso);
+    }
+
+    const cambiado = ({ target }) => {
+        const { name, value } = target;
+
+        setFormulario({
+            ...formulario,
+            [name]: value
+        });
+    }
+
+    return {
+        formulario,
+        enviado,
+        cambiado
+    }
+}
+
+```
+```jsx
+import React from 'react'
+import { useForm } from '../hooks/useForm'
+
+export const MiFormulario = () => {
+
+    const { formulario, enviado, cambiado } = useForm({});
+
+    return (
+        <div>
+            <h1>Formulario</h1>
+            <p>Formulario para guardar un curso</p>
+            <p>Curso guardado: {formulario.titulo}</p>
+            <pre className='codigo'>{JSON.stringify(formulario)}</pre>
+
+            <form className='mi-formulario' onSubmit={enviado}>
+                <input type='text' name='titulo' onChange={cambiado} placeholder='Titulo:' />
+                <input type='number' name='year' onChange={cambiado} placeholder='Año Publicacion' />
+                <textarea name='descripcion' onChange={cambiado} placeholder='Año publicacion' />
+                <input type='text' name='autor' onChange={cambiado} placeholder='Autor:' />
+                <input type='email' name='email' onChange={cambiado} placeholder='Correo de contacto:' />
+
+                <input type='submit' value="Enviar" />
+            </form>
+        </div>
+    )
+}
+
+```
+
+### Hook personalizados para peticiones con Ajax
+
+```jsx
+import { useEffect, useState } from "react";
+
+export const useAjax = (url) => {
+
+    const [estado, setEstado] = useState({
+        datos: null,
+        cargando: true
+    });
+
+    useEffect(() => {
+        getData();
+    }, [url]);
+
+    const getData = async() => {
+        setEstado({
+            ...estado,
+            cargando: true
+        });
+        const peticion = await fetch(url);
+        const { data } = await peticion.json();
+        setEstado({
+            datos: data,
+            cargando: false
+        });
+    }
+
+    return {
+        datos: estado.datos,
+        cargando: estado.cargando
+    }
+}
+
+```
+```jsx
+import React, { useState } from 'react'
+import { useAjax } from '../hooks/useAjax';
+
+export const MiUsuario = () => {
+
+    const [url, setUrl] = useState("https://reqres.in/api/users/1");
+    const {datos, cargando} = useAjax(url);
+
+    const getId = e => {
+        setUrl(`https://reqres.in/api/users/${e.target.value}`);
+    }
+
+    return (
+        <div>
+            <h1>Mi usuario:</h1>
+            <p>Datos del usuario</p>
+            <p>{cargando ? "Cargando..." : ""}</p>
+            <p>{datos?.first_name} {datos?.last_name}</p>
+            <input type='number' name='id' onChange={getId} />
         </div>
     )
 }
@@ -1433,60 +1647,205 @@ const mostarMensaje = useCallback(() => {
     console.log("Hola que tal soy un mensaje desde el componente Empleados!!");
 }, [pagina]);
 ```
-```jsx
 
+# Context
+El context nos permite enviar informacion entre componentes cuando usamos rutas. Para trabajar con ellos se suele crear un directorio donde iran todos los context
+```jsx
+import { createContext } from "react";
+
+/* De esta manera se crea un context */
+export const PruebaContext = createContext(null);
+```
+Tenemos que envolver los componentes donde queramos compartir la informacion, en este caso todos
+```jsx
+import './App.css';
+import { PruebaContext } from './context/PruebaContext';
+import { AppRouter } from './routing/AppRouter';
+
+function App() {
+
+  const curso = {
+    id: 1,
+    titulo: "Curso de React",
+    contenido: "Muchas horas de contenido y aprendizaje"
+  };
+
+  return (
+    <div className="App">
+    {/* Con el value le asignmaos la informacion a compartir como se haria con las props */}
+      <PruebaContext.Provider value={curso}>
+        <AppRouter />
+      </PruebaContext.Provider>
+    </div>
+  );
+}
+
+export default App;
 ```
 ```jsx
+import React, { useContext } from 'react'
+import { PruebaContext } from '../context/PruebaContext';
 
+export const Inicio = () => {
+
+  /* Con useContext accemos al contenido que estamos compartiendo */
+  const compartida = useContext(PruebaContext);
+  console.log(compartida);
+
+  return (
+    <div>
+      <h1>Inicio</h1>
+      <p>Pagina de inicio</p>
+      <p>Valor compartido: <strong>{ compartida.titulo }</strong></p>
+    </div>
+  )
+}
+```
+
+## Login con context
+Gracias al useContext podemos realizar un login, este seria un ejemplo de como hacerlo 
+```jsx
+import { createContext } from "react";
+
+/* De esta manera se crea un context */
+export const PruebaContext = createContext(null);
 ```
 ```jsx
+import { useEffect, useState } from 'react';
+import './App.css';
+import { PruebaContext } from './context/PruebaContext';
+import { AppRouter } from './routing/AppRouter';
 
+function App() {
+
+  const [usuario, setUsuario] = useState({});
+
+  useEffect(() => {
+    /* La primera vez que se carga el componente */
+    let user = JSON.parse(localStorage.getItem("user"))
+    setUsuario(user);
+  }, []);
+
+  useEffect(() => {
+    /* Cada vez que se actualiza el estado usuario se guarda en el localStorage */
+    localStorage.setItem("user", JSON.stringify(usuario));
+  }, [usuario]);
+
+  return (
+    <div className="App">
+      {/* Con el value le asignmaos la informacion a compartir como se haria con las props */}
+      <PruebaContext.Provider value={{ usuario, setUsuario }}>
+        <AppRouter />
+      </PruebaContext.Provider>
+    </div>
+  );
+}
+
+export default App;
 ```
 ```jsx
+import React, { useContext } from 'react'
+import { PruebaContext } from '../context/PruebaContext';
 
+export const Login = () => {
+
+  const { usuario, setUsuario } = useContext(PruebaContext);
+
+  const login = e => {
+    e.preventDefault();
+
+    let user = {
+      id: new Date().getTime(),
+      nombre: e.target.nombre.value,
+      apellidos: e.target.apellidos.value,
+      correo: e.target.correo.value
+    };
+
+    setUsuario(user);
+  }
+
+  return (
+    <div>
+      <h1>Login</h1>
+      <p>Pagina de login</p>
+
+      <form className='login' onSubmit={login}>
+        <input type='text' name='nombre' placeholder='nombre' />
+        <input type='text' name='apellidos' placeholder='apellidos' />
+        <input type='email' name='correo' placeholder='correo' />
+        <input type='submit' value='Enviar' />
+      </form>
+    </div>
+  )
+}
 ```
 ```jsx
+import React, { useContext } from 'react'
+import { Routes, Route, NavLink, BrowserRouter } from 'react-router-dom';
+import { Inicio } from '../components/Inicio';
+import { Articulos } from '../components/Articulos';
+import { Contacto } from '../components/Contacto';
+import { Error } from '../components/Error';
+import { Acerca } from '../components/Acerca';
+import { Login } from '../components/Login';
+import { PruebaContext } from '../context/PruebaContext';
 
-```
-```jsx
+export const AppRouter = () => {
 
-```
-```jsx
+    const { usuario, setUsuario } = useContext(PruebaContext);
 
-```
-```jsx
+    return (
+        <BrowserRouter>
+            <header className='header'>
+                <nav>
+                    <div className='logo'>
+                        <h2>Aprendiendo React Context</h2>
+                    </div>
+                    <ul>
+                        <li><NavLink to="/inicio">Inicio</NavLink></li>
+                        <li><NavLink to="/articulos">Articulos</NavLink></li>
+                        <li><NavLink to="/acerca-de">Acerca de</NavLink></li>
+                        <li><NavLink to="/contacto">Contacto</NavLink></li>
+                        {usuario.hasOwnProperty("nombre") && usuario.nombre !== null ? (
+                            <>
+                                <li>
+                                    <NavLink to="/">{usuario.nombre}</NavLink>
+                                </li>
+                                <li>
+                                    <a href='#/' onClick={e => {
+                                        e.preventDefault();
+                                        setUsuario({});
+                                    }}>Cerrar sesion</a>
+                                </li>
+                            </>
+                        ) : (
+                            <li>
+                                <NavLink to="/login">Login</NavLink>
+                            </li>
+                        )}
+                    </ul>
+                </nav>
+            </header>
 
+            <section className='content'>
+                {/* Cargar componentes */}
+                {/* Aqui se carga el componente que coincida con el path */}
+                <Routes>
+                    <Route path="/" element={<Inicio />} />
+                    <Route path="/inicio" element={<Inicio />} />
+                    <Route path="/articulos" element={<Articulos />} />
+                    <Route path="/acerca-de" element={<Acerca />} />
+                    <Route path="/contacto" element={<Contacto />} />
+                    <Route path="/login" element={<Login />} />
+                    <Route path='*' element={<Error />} />
+                </Routes>
+            </section>
+        </BrowserRouter>
+    )
+}
 ```
-```jsx
 
-```
-```jsx
 
-```
-```jsx
-
-```
-```jsx
-
-```
-```jsx
-
-```
-```jsx
-
-```
-```jsx
-
-```
-```jsx
-
-```
-```jsx
-
-```
-```jsx
-
-```
 ```jsx
 
 ```
