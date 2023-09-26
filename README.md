@@ -80,11 +80,46 @@ Para su ejecucion
 ```bash
 npm run dev
 ```
+Esto puede ser un ejemplo de una estrctura de directorios en la creacion de un proyecto con vite
 ```bash
-
-```
-```bash
-
+.
+├── index.html
+├── package.json
+├── package-lock.json
+├── public
+│   ├── proyecto3.png
+│   └── vite.svg
+├── README.md
+├── src
+│   ├── App.css
+│   ├── App.jsx
+│   ├── assets
+│   │   └── react.svg
+│   ├── components
+│   │   ├── layout
+│   │   │   ├── Footer.jsx
+│   │   │   ├── Header.jsx
+│   │   │   ├── Nav.jsx
+│   │   │   └── Sidebar.jsx
+│   │   └── pages
+│   │       ├── Article.jsx
+│   │       ├── Articles.jsx
+│   │       ├── Create.jsx
+│   │       ├── Edit.jsx
+│   │       ├── Error.jsx
+│   │       ├── Home.jsx
+│   │       ├── List.jsx
+│   │       └── Search.jsx
+│   ├── helpers
+│   │   ├── Global.jsx
+│   │   └── Petition.jsx
+│   ├── hooks
+│   │   └── useForm.js
+│   ├── index.css
+│   ├── main.jsx
+│   └── routing
+│       └── Routing.jsx
+└── vite.config.js
 ```
 
 # Componentes 

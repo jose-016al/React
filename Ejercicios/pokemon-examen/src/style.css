@@ -1,0 +1,18 @@
+#titulo {
+  background-color: #2F4F4F;
+  color: white;
+  margin: 0;
+}
+#selectorPokemones {
+  background-color: #DEB887;
+}
+#containerTitulo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-bottom: solid 1px black;
+  margin-bottom: 10px;
+}
+#tituloCard{
+  font-size: 35px;
+}

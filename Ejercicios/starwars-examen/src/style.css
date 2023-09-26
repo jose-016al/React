@@ -1,0 +1,54 @@
+    /* pagina principal */
+.homePersonajes {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    align-items: center;
+}
+
+    /* Letra de la web */
+#navTitulos {
+    font-family: biko;    
+}
+
+    /* Formato de las paginas de informacion */
+#containerInformartion {
+    display: flex;
+    flex-direction: column;
+}
+#navContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+#peopleContainer > p {
+    margin: 0px;
+}
+#containerImagen {
+    height: 250px;
+    overflow: hidden;
+}
+#informacionPeopleContainer > div {
+    width: 32%;
+    margin: 0px 6px 20px 6px;
+}
+#navContainer ul {
+    height: 70px;
+    list-style: none;
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    padding: 0px;
+    font-size: 12px;
+}
+#navContainer ul li {
+    width: 25%;
+}
+#cardHome {
+    border-radius: 20px;
+    margin: 5px;
+}
+#imgHome {
+    border-top-right-radius: 20px;
+    border-top-left-radius: 20px;
+}
