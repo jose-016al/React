@@ -4,6 +4,7 @@
 - [Extensiones para VS code y el navegador](#extensiones-para-vs-code-y-el-navegador)
 - [Listado de atajos con la extension VS code](#listado-de-atajos-con-la-extension-vs-code)
 - [Creacion de un proyecto](#creacion-de-un-proyecto)
+  - [Creacion de un proyecto con Vite](#creacion-de-un-proyecto-con-vite)
 - [Componentes](#componentes)
 - [Variables](#variables)
 - [Condicionales y bucles en JSX](#condicionales-y-bucles-en-jsx)
@@ -41,7 +42,10 @@
   - [Hook useCallback](#hook-usecallback)
 - [Context](#context)
   - [Login con Context](#login-con-context)
-
+- [Librerias interesantes](#librerias-interesantes)
+  - [React-Time-ago](#react-time-ago)
+  - [Formik](#formik)
+  - [Yup](#yup)
 
 # Extensiones para VS code y el navegador
 Podemos instalar extensiones para mejorar el funcionamienot de React en nuestro entorno de desarrollo
@@ -120,6 +124,10 @@ Esto puede ser un ejemplo de una estrctura de directorios en la creacion de un p
 │   └── routing
 │       └── Routing.jsx
 └── vite.config.js
+```
+Si nos da algun tipo de fallo por que le hemos cambiado el nombre al directorio que contiene el proyecto, y nos da un fallo de que noe encuentra el paquete de vite podemos instalarlo
+```bash
+npm install vite --save-dev
 ```
 
 # Componentes 
@@ -1901,16 +1909,132 @@ export const AppRouter = () => {
 }
 ```
 
+# Librerias interesantes
 
-```jsx
-
+## React time ago
+Con [React-time-ago](https://www.npmjs.com/package/react-time-ago) podemos formatear fechas, nos facilita el formateo de las fechas, (hace x minutos, hace horas, hace años)
+```bash
+npm install react-time-ago javascript-time-ago --save
 ```
+Podemos consultar la documentacion, aunque es bastante sencillo de usar, tendremos que importarlo y configurarlo desde el index.js
 ```jsx
+/* Cargar confiugracion react-time-ago */
+import TimeAgo from 'javascript-time-ago'
+import es from 'javascript-time-ago/locale/es.json'
 
+TimeAgo.addDefaultLocale(es)
+TimeAgo.addLocale(es);
 ```
+Una vez tengamos lista su configuracion ya podremos usarlo en nuestros componentes
 ```jsx
-
+<p>
+    <ReactTimeAgo date={publication.created_at} locale="es-ES" />
+</p>
 ```
-```jsx
 
+## Formik
+Este paquuete nos permite realizar validaciones de formularios
+```bash
+npm install formik --save
+```
+Un ejemplo de como recoger datos de un formulario con este paquete
+```jsx
+import React from 'react'
+import { useFormik } from "formik";
+
+export const MiFormulario = () => {
+
+    const formik = useFormik({
+        initialValues: {
+            nombre: "",
+            email: ""
+        },
+        onSubmit: values => {
+            console.log(values);
+        }
+    });
+
+    return (
+        <div className='container-form'>
+            <h1>Mi formulario con Formik</h1>
+            <form onSubmit={formik.handleSubmit}>
+                <div className='form-group'>
+                    <label htmlFor='nombre'>Nombre</label>
+                    <input type='text' id="nombre" name='nombre'
+                        value={formik.values.nombre}
+                        onChange={formik.handleChange} />
+                </div>
+                <div className='form-group'>
+                    <label htmlFor='email'>Correo electronico</label>
+                    <input type='email' id="email" name='email'
+                        value={formik.values.email}
+                        onChange={formik.handleChange} />
+                </div>
+
+                <input type='submit' value="Enviar" />
+            </form>
+        </div>
+    )
+}
+```
+
+## Yup
+Con [Yup](https://www.npmjs.com/package/yup) podremos validar formularios de una forma muy sencilla
+```bash
+npm install yup --save
+```
+Aqui tenemos un ejemplo de como validar un formulario con yup, junto con la recogida de sus valores con formik
+```jsx
+import { useFormik } from "formik";
+import * as Yup from "yup";
+
+const validationSchema = Yup.object().shape({
+    nombre: Yup.string()
+        .min(3, "El nombre es muy corto")
+        .max(40, "El nombre es demasiado largo")
+        .required("Campo obligatorio"),
+    email: Yup.string().email("Email invalido").required("Campo obligatorio")
+});
+
+export const MiFormulario = () => {
+
+    const formik = useFormik({
+        initialValues: {
+            nombre: "",
+            email: ""
+        },
+        validationSchema,
+        onSubmit: values => {
+            console.log(values);
+        }
+    });
+
+    return (
+        <div className='container-form'>
+            <h1>Mi formulario con Formik</h1>
+            <form onSubmit={formik.handleSubmit}>
+                <div className='form-group'>
+                    <label htmlFor='nombre'>Nombre</label>
+                    <input type='text' id="nombre" name='nombre'
+                        value={formik.values.nombre}
+                        onChange={formik.handleChange} />
+                    <div className="error">
+                        {formik.errors.nombre && formik.touched.nombre ? formik.errors.nombre : ""}
+                    </div>
+                </div>
+                <div className='form-group'>
+                    <label htmlFor='email'>Correo electronico</label>
+                    <input type='email' id="email" name='email'
+                        value={formik.values.email}
+                        onChange={formik.handleChange} />
+                    <div className="error">
+                        {formik.errors.email && formik.touched.email ? formik.errors.email : ""}
+                    </div>
+                </div>
+
+                <input type='submit' value="Enviar" />
+            </form>
+        </div>
+    )
+}
 ```
