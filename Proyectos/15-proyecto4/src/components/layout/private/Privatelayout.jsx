@@ -11,7 +11,7 @@ export const Privatelayout = () => {
         return <h1>Cargando</h1>
     } else {
         return (
-            <>
+            <div className='container__private'>
                 {/* LAYOUT */}
                 <Header />
                 {/* Contenido principal */}
@@ -20,7 +20,7 @@ export const Privatelayout = () => {
                 </section>
                 {/* Barra lateral */}
                 <Sidebar />
-            </>
+            </div>
         )
     }
 

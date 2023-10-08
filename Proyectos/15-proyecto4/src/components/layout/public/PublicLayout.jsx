@@ -1,5 +1,4 @@
 import { useAuth } from '../../../hooks/useAuth'
-import { Header } from './Header'
 import { Navigate, Outlet } from 'react-router-dom'
 
 export const PublicLayout = () => {
@@ -7,13 +6,19 @@ export const PublicLayout = () => {
     const { auth } = useAuth();
 
     return (
-        <>
+        <div className='container__public'>
             {/* LAYOUT */}
-            <Header />
             {/* Contenido principal */}
-            <section className='layout__content'>
-                {!auth._id ? <Outlet /> : <Navigate to="/social" /> } 
+            <section className='login-field'>
+                {/* <Nav /> */}
+                {!auth._id ? <Outlet /> : <Navigate to="/social" />}
             </section>
-        </>
+            <span className="square square-tl"></span>
+            <span className="square square-tr"></span>
+            <span className="square square-bl"></span>
+            <span className="square square-br"></span>
+            <span className="star star1"></span>
+            <span className="star star2"></span>
+        </div>
     )
 }

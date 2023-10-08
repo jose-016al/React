@@ -1,17 +1,35 @@
 import { useState } from "react";
 import { Global } from "../../helpers/Global";
 import { Petition } from "../../helpers/Petition";
-import { useForm } from "../../hooks/useForm"
 import { useAuth } from "../../hooks/useAuth";
+import { Link } from "react-router-dom";
+import { useFormik } from "formik";
+import * as Yup from "yup";
+
+const validationSchema = Yup.object().shape({
+    email: Yup.string()
+        .email("El correo electrónico no es válido")
+        .required("El correo electrónico es obligatorio"),
+    password: Yup.string().required("La contraseña es obligatoria")
+});
 
 export const Login = () => {
 
-    const { form, changed } = useForm({});
     const [saved, setSaved] = useState("not_sended");
-    const {setAuth} = useAuth();
+    const { setAuth } = useAuth();
 
-    const loginUser = async(e) => {
-        e.preventDefault();
+    const formik = useFormik({
+        initialValues: {
+            email: "",
+            password: ""
+        },
+        validationSchema,
+        onSubmit: values => {
+            loginUser(values)
+        }
+    });
+
+    const loginUser = async (form) => {
         let user = form;
         const { data } = await Petition(`${Global.url}user/login`, "POST", user);
         if (data.status === "success") {
@@ -30,24 +48,36 @@ export const Login = () => {
 
     return (
         <>
-            <header className="content__header content__header--public">
-                <h1 className="content__title">Login</h1>
-            </header>
-
-            <div className="content__posts">
+            <div className="login-background">
                 {saved == "login" ? <strong className="alert alert-success">Se ha identificado</strong> : ""}
                 {saved == "error" ? <strong className="alert alert-danger">El usuario o la contraseña son incorrecta</strong> : ""}
-                <form className="form-login" onSubmit={loginUser}>
-                    <div className="form-group">
-                        <label htmlFor="email">Correo electronico</label>
-                        <input type="email" name="email" onChange={changed} />
-                    </div>
-                    <div className="form-group">
-                        <label htmlFor="password">Contraseña</label>
-                        <input type="password" name="password" onChange={changed} />
-                    </div>
+                <div className="login-title">
+                    <span>LOGIN</span>
+                </div>
 
-                    <input type="submit" value="Identificate" className="btn btn-success" />
+                <form className="login-form" onSubmit={formik.handleSubmit}>
+                    <div className="form-group">
+                        <input type="email" name="email"
+                            value={formik.values.email}
+                            onChange={formik.handleChange} />
+                        <label htmlFor="email">Correo electronico</label>
+                    </div>
+                    <div className="error">
+                        {formik.errors.email && formik.touched.email ? formik.errors.email : ""}
+                    </div>
+                    <div className="form-group">
+                        <input type="password" name="password"
+                            value={formik.values.password}
+                            onChange={formik.handleChange} />
+                        <label htmlFor="password">Contraseña</label>
+                    </div>
+                    <div className="error">
+                        {formik.errors.password && formik.touched.password ? formik.errors.password : ""}
+                    </div>
+                    <div className="form-group button">
+                        <Link to="/register">Registro</Link>
+                        <input type="submit" value="Identificate" />
+                    </div>
                 </form>
             </div>
         </>
