@@ -8,53 +8,50 @@ export const Nav = () => {
     const { auth } = useAuth();
 
     return (
-        <nav className="navbar__container-lists">
-
-            <ul className="container-lists__menu-list">
-                <li className="menu-list__item">
-                    <NavLink to="/social" className="menu-list__link">
+        <nav>
+            <ul className='nav-right'>
+                <li>
+                    <NavLink to="/social">
                         <i className="fa-solid fa-house"></i>
-                        <span className="menu-list__title">Inicio</span>
+                        <span>Inicio</span>
                     </NavLink>
                 </li>
-
-                <li className="menu-list__item">
-                    <NavLink to="/social/feed" className="menu-list__link">
+                <li>
+                    <NavLink to="/social/feed">
                         <i className="fa-solid fa-list"></i>
-                        <span className="menu-list__title">Timeline</span>
+                        <span>Timeline</span>
                     </NavLink>
                 </li>
-
-                <li className="menu-list__item">
-                    <NavLink to="/social/people" className="menu-list__link">
+                <li>
+                    <NavLink to="/social/people">
                         <i className="fa-solid fa-user"></i>
-                        <span className="menu-list__title">Gente</span>
+                        <span>Gente</span>
                     </NavLink>
                 </li>
             </ul>
 
-            <ul className="container-lists__list-end">
-                <li className="list-end__item">
+            <ul className='nav-left'>
+                <li className='image-profile'>
                     <NavLink to={`/social/profile/${auth._id}`} className="list-end__link-image">
-                        {auth.image != "default.png" && <img src={`${Global.url}user/avatar/${auth.image}`} className="list-end__img" alt="Imagen de perfil" />}
-                        {auth.image == "default.png" && <img src={avatar} className="list-end__img" alt="Imagen de perfil" />}
+                        {auth.image != "default.png" && <img src={`${Global.url}user/avatar/${auth.image}`} alt="Imagen de perfil" />}
+                        {auth.image == "default.png" && <img src={avatar} alt="Imagen de perfil" />}
                     </NavLink>
                 </li>
-                <li className="list-end__item">
-                    <NavLink to={`/social/profile/${auth._id}`} className="list-end__link">
-                        <span className="list-end__name">{auth.nick}</span>
+                <li>
+                    <NavLink to={`/social/profile/${auth._id}`}>
+                        <span>{auth.nick}</span>
                     </NavLink>
                 </li>
-                <li className="list-end__item">
-                    <NavLink to="/social/settings" className="list-end__link">
+                <li>
+                    <NavLink to="/social/settings">
                         <i className="fa-solid fa-gear"></i>
-                        <span className="list-end__name">Ajustes</span>
+                        <span>Ajustes</span>
                     </NavLink>
                 </li>
-                <li className="list-end__item">
-                    <NavLink to="/social/logout" className="list-end__link">
+                <li className='nav-logout'>
+                    <NavLink to="/social/logout">
                         <i className="fa-solid fa-arrow-right-from-bracket"></i>
-                        <span className="list-end__name">Cerrar sesión</span>
+                        <span>Cerrar sesión</span>
                     </NavLink>
                 </li>
             </ul>

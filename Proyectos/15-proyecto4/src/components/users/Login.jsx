@@ -55,7 +55,7 @@ export const Login = () => {
                     <span>LOGIN</span>
                 </div>
 
-                <form className="login-form" onSubmit={formik.handleSubmit}>
+                <form className="login-form" id="login" onSubmit={formik.handleSubmit}>
                     <div className="form-group">
                         <input type="email" name="email"
                             value={formik.values.email}

@@ -6,9 +6,6 @@
 .error {
     color: red;
     display: flex;
-    
-    
-    
 }
 
 /* ------------------------------Estilos para la parte publica------------------------------ */
@@ -50,6 +47,7 @@
     color: #fff;
     text-align: center;
     margin-top: 50px;
+    margin-bottom: 20px;
     padding: 10px;
     border-top: 5px solid rgba(255, 255, 255, 0.1);
     border-bottom: 5px solid rgba(255, 255, 255, 0.1);
@@ -105,7 +103,7 @@
 }
 
 .form-group input:focus~label {
-    top: 0;
+    top: 0%;
     font-size: 12px;
 }
 
@@ -234,3 +232,75 @@
         transform: rotate(360deg);
     }
 }
+
+/* ------------------------------Estilos para la parte privada------------------------------ */
+
+/* header y nav */
+
+header {
+    width: 100%;
+    background-color: #132043;
+    display: flex;
+    align-items: center;
+    padding: 0px 10px 10px 10px;
+}
+
+header .title {
+    min-width: 15%;
+    text-align: center;
+    padding: 10px;
+}
+
+header .title a {
+    text-decoration: none;
+    color: white;
+    font-weight: bolder;
+    font-size: 25px;
+}
+
+header nav {
+    display: flex;
+    justify-content: space-between;
+}
+
+header nav ul {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    list-style: none;
+}
+
+header nav ul li a {
+    text-decoration: none;
+    color: white;
+    padding: 15px;
+    transition: all 300ms;
+}
+
+header nav ul li a:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+header nav ul .nav-logout a:hover {
+    background-color: rgba(255, 0, 0, 0.5);
+}
+
+header nav ul li a i {
+    margin-right: 10px;
+}
+
+/* menu derecho */
+header nav .nav-left {
+    width: 40%;
+}
+
+header nav ul .image-profile {
+    width: 10%;
+    margin-right: 10px;
+}
+
+header nav ul .image-profile a img {
+    width: 100%;
+    border-radius: 25px;
+}
+
