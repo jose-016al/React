@@ -28,49 +28,48 @@ export const PublicationList = ({ publications, getPublications, page, setPage, 
 
     return (
         <>
-            <div className="content__posts">
-                {publications.map(publication => {
-                    return (
-                        <article key={publication._id} className="posts__post">
-                            <div className="post__container">
-                                <div className="post__image-user">
-                                    <Link to={`/social/profile/${publication.user._id}`} className="post__image-link">
-                                        {publication.user.image != "default.png" && <img src={`${Global.url}user/avatar/${publication.user.image}`} className="post__user-image" alt="Foto de perfil" />}
-                                        {publication.user.image == "default.png" && <img src={avatar} className="post__user-image" alt="Foto de perfil" />}
+            {publications.map(publication => {
+                return (
+                    <article key={publication._id}>
+                        <div>
+                            <div className="image-user">
+                                <Link to={`/social/profile/${publication.user._id}`}>
+                                    {publication.user.image != "default.png" && <img src={`${Global.url}user/avatar/${publication.user.image}`} className="post__user-image" alt="Foto de perfil" />}
+                                    {publication.user.image == "default.png" && <img src={avatar} className="post__user-image" alt="Foto de perfil" />}
+                                </Link>
+                            </div>
+                            <div className="post-user">
+                                <div>
+                                    <Link to={`/social/profile/${publication.user._id}`}>{publication.user.name} {publication.user.surname}</Link>
+                                    <span> | </span>
+                                    <Link to={`/social/profile/${publication.user._id}`}>
+                                        <ReactTimeAgo date={new Date(publication.created_at).getTime()} locale="es-ES" />
                                     </Link>
                                 </div>
-                                <div className="post__body">
-                                    <div className="post__user-info">
-                                        <Link to={`/social/profile/${publication.user._id}`} className="user-info__name">{publication.user.name} {publication.user.surname}</Link>
-                                        <span className="user-info__divider"> | </span>
-                                        <Link to={`/social/profile/${publication.user._id}`} className="user-info__create-date">
-                                            <ReactTimeAgo date={publication.created_at} locale="es-ES" />
-                                        </Link>
-                                    </div>
-                                    <h4 className="post__content">{publication.text}</h4>
+                                <div>
+                                    <h4>{publication.text}</h4>
 
                                     {publication.file &&
                                         <img src={`${Global.url}publication/media/${publication.file}`} alt='Foto de la publicacion' />
                                     }
                                 </div>
                             </div>
-
                             {publication.user._id === auth._id &&
-                                <div className="post__buttons">
-                                    <button onClick={() => deletePublication(publication._id)} className="post__button">
+                                <div className="people-buttons">
+                                    <button onClick={() => deletePublication(publication._id)} className="unfollow">
                                         <i className="fa-solid fa-trash-can"></i>
                                     </button>
                                 </div>
                             }
-                        </article>
-                    );
-                })}
-            </div>
+                        </div>
+                    </article>
+                );
+            })}
 
             {
                 more &&
-                <div className="content__container-btn">
-                    <button className="content__btn-more-post" onClick={nextPage}>
+                <div className="button-more">
+                    <button onClick={nextPage}>
                         Ver mas publicaciones
                     </button>
                 </div>

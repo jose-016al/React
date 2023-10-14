@@ -45,67 +45,59 @@ export const Sidebar = () => {
     }
 
     return (
-        <aside className="layout__aside">
-
-            <header className="aside__header">
-                <h1 className="aside__title">Hola, {auth.name}</h1>
-            </header>
-
-            <div className="aside__container">
-                <div className="aside__profile-info">
-                    <div className="profile-info__general-info">
-                        <div className="general-info__container-avatar">
-                            {auth.image != "default.png" && <img src={`${Global.url}user/avatar/${auth.image}`} className="container-avatar__img" alt="Foto de perfil" />}
-                            {auth.image == "default.png" && <img src={avatar} className="container-avatar__img" alt="Foto de perfil" />}
-                        </div>
-
-                        <div className="general-info__container-names">
-                            <Link to={`/social/profile/${auth._id}`} className="container-names__name">{auth.name} {auth.surname}</Link>
-                            <p className="container-names__nickname">{auth.nick}</p>
-                        </div>
+        <aside>
+            <div>
+                <div className="profile-info">
+                    <div className="profile-info-image">
+                        {auth.image != "default.png" && <img src={`${Global.url}user/avatar/${auth.image}`} alt="Foto de perfil" />}
+                        {auth.image == "default.png" && <img src={avatar} alt="Foto de perfil" />}
                     </div>
 
-                    <div className="profile-info__stats">
-                        <div className="stats__following">
-                            <Link to={`/social/following/${auth._id}`} className="following__link">
-                                <span className="following__title">Siguiendo</span>
-                                <span className="following__number">{counters.following}</span>
-                            </Link>
-                        </div>
-                        <div className="stats__following">
-                            <Link to={`/social/followers/${auth._id}`} className="following__link">
-                                <span className="following__title">Seguidores</span>
-                                <span className="following__number">{counters.followed}</span>
-                            </Link>
-                        </div>
-
-                        <div className="stats__following">
-                            <Link to={`/social/profile/${auth._id}`} className="following__link">
-                                <span className="following__title">Publicaciones</span>
-                                <span className="following__number">{counters.publications}</span>
-                            </Link>
-                        </div>
+                    <div className="profile-info-name">
+                        <Link to={`/social/profile/${auth._id}`}>{auth.name} {auth.surname}</Link>
+                        <p>{auth.nick}</p>
                     </div>
                 </div>
 
-
-                <div className="aside__container-form">
-                    {saved == "saved" ? <strong className="alert alert-success">Post publicado</strong> : ""}
-                    {saved == "error" ? <strong className="alert alert-danger">No se ha podido publicar el post</strong> : ""}
-                    <form id='publication-form' onSubmit={savePublication} className="container-form__form-post">
-                        <div className="form-post__inputs">
-                            <label htmlFor="text" className="form-post__label">¿Que estas pesando hoy?</label>
-                            <textarea name="text" className="form-post__textarea" onChange={changed} />
-                        </div>
-                        <div className="form-post__inputs">
-                            <label htmlFor="file0" className="form-post__label">Sube tu foto</label>
-                            <input type="file" name="file0" id='file' className="form-post__image" />
-                        </div>
-
-                        <input type="submit" value="Enviar" className="form-post__btn-submit" />
-                    </form>
+                <div className="profile-info-stats">
+                    <div>
+                        <Link to={`/social/following/${auth._id}`}>
+                            <span>Siguiendo</span>
+                            <span>{counters.following}</span>
+                        </Link>
+                    </div>
+                    <div>
+                        <Link to={`/social/followers/${auth._id}`}>
+                            <span>Seguidores</span>
+                            <span>{counters.followed}</span>
+                        </Link>
+                    </div>
+                    <div>
+                        <Link to={`/social/profile/${auth._id}`}>
+                            <span>Publicaciones</span>
+                            <span>{counters.publications}</span>
+                        </Link>
+                    </div>
                 </div>
             </div>
+
+
+            {/* <div className="aside__container-form">
+                {saved == "saved" ? <strong className="alert alert-success">Post publicado</strong> : ""}
+                {saved == "error" ? <strong className="alert alert-danger">No se ha podido publicar el post</strong> : ""}
+                <form id='publication-form' onSubmit={savePublication} className="container-form__form-post">
+                    <div className="form-post__inputs">
+                        <label htmlFor="text" className="form-post__label">¿Que estas pesando hoy?</label>
+                        <textarea name="text" className="form-post__textarea" onChange={changed} />
+                    </div>
+                    <div className="form-post__inputs">
+                        <label htmlFor="file0" className="form-post__label">Sube tu foto</label>
+                        <input type="file" name="file0" id='file' className="form-post__image" />
+                    </div>
+
+                    <input type="submit" value="Enviar" className="form-post__btn-submit" />
+                </form>
+            </div> */}
         </aside>
     )
 }

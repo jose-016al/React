@@ -90,48 +90,50 @@ export const Profile = () => {
 
     return (
         <>
-            <header className="aside__profile-info">
-                <div className="profile-info__general-info">
-                    <div className="general-info__container-avatar">
-                        {profile.image != "default.png" && <img src={`${Global.url}user/avatar/${profile.image}`} className="container-avatar__img" alt="Foto de perfil" />}
-                        {profile.image == "default.png" && <img src={avatar} className="container-avatar__img" alt="Foto de perfil" />}
+            <div className='profile'>
+                <div className="profile-info">
+                    <div className="profile-info-image-user">
+                        {profile.image != "default.png" && <img src={`${Global.url}user/avatar/${profile.image}`} alt="Foto de perfil" />}
+                        {profile.image == "default.png" && <img src={avatar} alt="Foto de perfil" />}
                     </div>
-                    <div className="general-info__container-names">
-                        <div className="container-names__name">
-                            <h1>{profile.name} {profile.surname}</h1>
+                    <div className="profile-info-name-user">
+                        <div className='people-buttons'>
                             {auth._id != userid &&
                                 (iFollow ?
-                                    <button onClick={() => unfollow(userid)} className="content__button post__button content__button--right">Dejar de seguir</button>
-                                    : <button onClick={() => follow(userid)} className="content__button content__button--right">Seguir</button>
+                                    <button onClick={() => unfollow(userid)} className="unfollow">Dejar de seguir</button>
+                                    : <button onClick={() => follow(userid)}>Seguir</button>
                                 )}
                         </div>
-                        <h2 className="container-names__nickname">{profile.nick}</h2>
-                        <p>{profile.bio}</p>
+                        <div>
+                            <h1>{profile.name} {profile.surname}</h1>
+                            <h2>{profile.nick}</h2>
+                            <p>{profile.bio}</p>
+                        </div>
                     </div>
                 </div>
-                <div className="profile-info__stats">
-                    <div className="stats__following">
-                        <Link to={`/social/following/${userid}`} className="following__link">
-                            <span className="following__title">Siguiendo</span>
-                            <span className="following__number">{counters.following}</span>
+                <div className="profile-info-stats">
+                    <div>
+                        <Link to={`/social/following/${userid}`}>
+                            <span>Siguiendo</span>
+                            <span>{counters.following}</span>
                         </Link>
                     </div>
-                    <div className="stats__following">
-                        <Link to={`/social/followers/${userid}`} className="following__link">
-                            <span className="following__title">Seguidores</span>
-                            <span className="following__number">{counters.followed}</span>
+                    <div>
+                        <Link to={`/social/followers/${userid}`}>
+                            <span>Seguidores</span>
+                            <span>{counters.followed}</span>
                         </Link>
                     </div>
-                    <div className="stats__following">
-                        <Link to={`/social/profile/${userid}`} className="following__link">
-                            <span className="following__title">Publicaciones</span>
-                            <span className="following__number">{counters.publications}</span>
+                    <div>
+                        <Link to={`/social/profile/${userid}`}>
+                            <span>Publicaciones</span>
+                            <span>{counters.publications}</span>
                         </Link>
                     </div>
                 </div>
-            </header>
+            </div>
 
-            <PublicationList 
+            <PublicationList
                 publications={publications}
                 getPublications={getPublications}
                 page={page}

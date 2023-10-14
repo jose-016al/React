@@ -42,48 +42,49 @@ export const ListUser = ({ users, getUsers, following, setFollowing, page, setPa
 
                 {users.map(user => {
                     return (
-                        <article key={user._id} className="posts__post">
-                            <div className="post__container">
-                                <div className="post__image-user">
-                                    <Link to={`/social/profile/${user._id}`} className="post__image-link">
-                                        {user.image != "default.png" && <img src={`${Global.url}user/avatar/${user.image}`} className="post__user-image" alt="Foto de perfil" />}
-                                        {user.image == "default.png" && <img src={avatar} className="post__user-image" alt="Foto de perfil" />}
+                        <article key={user._id}>
+                            <div className='people'>
+                                <div className="image-people">
+                                    <Link to={`/social/profile/${user._id}`}>
+                                        {user.image != "default.png" && <img src={`${Global.url}user/avatar/${user.image}`} alt="Foto de perfil" />}
+                                        {user.image == "default.png" && <img src={avatar} alt="Foto de perfil" />}
                                     </Link>
                                 </div>
-                                <div className="post__body">
-                                    <div className="post__user-info">
-                                        <Link to={`/social/profile/${user._id}`} className="user-info__name">{user.name} {user.surname}</Link>
-                                        <span className="user-info__divider"> | </span>
-                                        <Link to={`/social/profile/${user._id}`} className="user-info__create-date">
-                                            <ReactTimeAgo date={user.created_at} locale='es-ES' />
+                                <div className="post-user">
+                                    <div>
+                                        <Link to={`/social/profile/${user._id}`}>{user.name} {user.surname}</Link>
+                                        <span> | </span>
+                                        <Link to={`/social/profile/${user._id}`}>
+                                            <ReactTimeAgo date={new Date(user.created_at).getTime()} locale="es-ES" />
                                         </Link>
                                     </div>
-                                    <h4 className="post__content">{user.bio}</h4>
+                                    <div>
+                                        <h4>{user.bio}</h4>
+                                    </div>
                                 </div>
+                                {user._id !== auth._id &&
+                                    <div className="people-buttons">
+                                        {!following.includes(user._id) &&
+                                            <button onClick={() => follow(user._id)}>
+                                                Seguir
+                                            </button>
+                                        }
+                                        {following.includes(user._id) &&
+                                            <button onClick={() => unfollow(user._id)} className="unfollow">
+                                                Dejar de Seguir
+                                            </button>
+                                        }
+                                    </div>
+                                }
                             </div>
-
-                            {user._id !== auth._id &&
-                                <div className="post__buttons">
-                                    {!following.includes(user._id) &&
-                                        <button onClick={() => follow(user._id)} className="post__button post__button--green">
-                                            Seguir
-                                        </button>
-                                    }
-                                    {following.includes(user._id) &&
-                                        <button onClick={() => unfollow(user._id)} className="post__button">
-                                            Dejar de Seguir
-                                        </button>
-                                    }
-                                </div>
-                            }
                         </article>
                     );
                 })}
             </div>
 
             {more &&
-                <div className="content__container-btn">
-                    <button onClick={nextPage} className="content__btn-more-post">
+                <div className="button-more">
+                    <button onClick={nextPage}>
                         Ver mas personas
                     </button>
                 </div>

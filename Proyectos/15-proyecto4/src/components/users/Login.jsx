@@ -59,7 +59,8 @@ export const Login = () => {
                     <div className="form-group">
                         <input type="email" name="email"
                             value={formik.values.email}
-                            onChange={formik.handleChange} />
+                            onChange={formik.handleChange} 
+                            placeholder="&nbsp;" />
                         <label htmlFor="email">Correo electronico</label>
                     </div>
                     <div className="error">
@@ -68,7 +69,8 @@ export const Login = () => {
                     <div className="form-group">
                         <input type="password" name="password"
                             value={formik.values.password}
-                            onChange={formik.handleChange} />
+                            onChange={formik.handleChange}
+                            placeholder="&nbsp;" />
                         <label htmlFor="password">Contraseña</label>
                     </div>
                     <div className="error">

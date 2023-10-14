@@ -40,9 +40,10 @@ export const People = () => {
 
     return (
         <>
-            <header className="content__header">
-                <h1 className="content__title">Gente</h1>
-            </header>
+            <div className="content-title">
+                <h1>Usuarios</h1>
+            </div>
+            
             <ListUser
                 users={users}
                 getUsers={getUsers}

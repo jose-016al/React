@@ -64,7 +64,8 @@ export const Register = () => {
                     <div className="form-group">
                         <input type="text" name="name"
                             value={formik.values.name}
-                            onChange={formik.handleChange} />
+                            onChange={formik.handleChange} 
+                            placeholder="&nbsp;" />
                         <label htmlFor="name">Nombre</label>
                     </div>
                     <div className="error">
@@ -75,7 +76,8 @@ export const Register = () => {
                     <div className="form-group">
                         <input type="text" name="surname"
                             value={formik.values.surname}
-                            onChange={formik.handleChange} />
+                            onChange={formik.handleChange} 
+                            placeholder="&nbsp;" />
                         <label htmlFor="surname">Apellidos</label>
                     </div>
                     <div className="error">
@@ -84,7 +86,8 @@ export const Register = () => {
                     <div className="form-group">
                         <input type="text" name="nick"
                             value={formik.values.nick}
-                            onChange={formik.handleChange} />
+                            onChange={formik.handleChange}
+                            placeholder="&nbsp;" />
                         <label htmlFor="nick">Nick</label>
                     </div>
                     <div className="error">
@@ -93,7 +96,8 @@ export const Register = () => {
                     <div className="form-group">
                         <input type="email" name="email"
                             value={formik.values.email}
-                            onChange={formik.handleChange} />
+                            onChange={formik.handleChange}
+                            placeholder="&nbsp;" />
                         <label htmlFor="email">Correo electronico</label>
                     </div>
                     <div className="error">
@@ -102,7 +106,8 @@ export const Register = () => {
                     <div className="form-group">
                         <input type="password" name="password"
                             value={formik.values.password}
-                            onChange={formik.handleChange} />
+                            onChange={formik.handleChange} 
+                            placeholder="&nbsp;" />
                         <label htmlFor="password">Contraseña</label>
                     </div>
                     <div className="error">

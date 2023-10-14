@@ -16,7 +16,7 @@ export const Config = () => {
         delete user.file0;
         const token = localStorage.getItem('token');
         const { data } = await Petition(`${Global.url}user/update`, "PUT", user, false, token);
-        
+
         if (data.status === "success") {
             delete data.user.pawssword
             const updatedUser = { ...auth, ...data.user };
@@ -46,52 +46,59 @@ export const Config = () => {
 
     return (
         <>
-            <header className="content__header content__header--public">
-                <h1 className="content__title">Ajustes</h1>
-            </header>
+            <div className="content-title">
+                <h1>Ajustes</h1>
+            </div>
 
-            <div className="content__posts">
+            <div>
                 {saved == "saved" ? <strong className="alert alert-success">El usuario se ha actualizado correctamente</strong> : ""}
                 {saved == "error" ? <strong className="alert alert-danger">No se ha podido actualizar el usuario</strong> : ""}
-                <form className="config-form" onSubmit={updateUser}>
-                    <div className="form-group">
-                        <label htmlFor="name">Nombre</label>
-                        <input type="text" name="name" defaultValue={auth.name} />
-                    </div>
-                    <div className="form-group">
-                        <label htmlFor="surname">Apellidos</label>
-                        <input type="text" name="surname" defaultValue={auth.surname} />
-                    </div>
-                    <div className="form-group">
-                        <label htmlFor="nick">Nick</label>
-                        <input type="text" name="nick" defaultValue={auth.nick} />
-                    </div>
-                    <div className="form-group">
-                        <label htmlFor="bio">Biografia</label>
-                        <textarea type="text" name="bio" defaultValue={auth.bio} />
-                    </div>
-                    <div className="form-group">
-                        <label htmlFor="email">Correo electronico</label>
-                        <input type="email" name="email" defaultValue={auth.email} />
-                    </div>
-                    <div className="form-group">
-                        <label htmlFor="password">Contraseña</label>
-                        <input type="password" name="password" />
-                    </div>
-                    <div className="form-group">
-                        <label htmlFor="file0">imagen de perfil</label>
-                        <div className="general-info__container-avatar">
-                            {auth.image != "default.png" && <img src={`${Global.url}user/avatar/${auth.image}`} className="container-avatar__img" alt="Foto de perfil" />}
-                            {auth.image == "default.png" && <img src={avatar} className="container-avatar__img" alt="Foto de perfil" />}
+                <form className='config-form' onSubmit={updateUser}>
+                    <div className='config-form-container'>
+                        <div>
+                            <div className="form-group-config">
+                                <input type="text" name="name" defaultValue={auth.name} placeholder="&nbsp;" />
+                                <label htmlFor="name">Nombre</label>
+                            </div>
+                            <div className="form-group-config">
+                                <input type="text" name="surname" defaultValue={auth.surname} placeholder="&nbsp;" />
+                                <label htmlFor="surname">Apellidos</label>
+                            </div>
+                            <div className="form-group-config">
+                                <input type="text" name="nick" defaultValue={auth.nick} placeholder="&nbsp;" />
+                                <label htmlFor="nick">Nick</label>
+                            </div>
                         </div>
-                        <br />
+                        <div>
+                            <div className="form-group-config">
+                                <textarea type="text" name="bio" defaultValue={auth.bio} placeholder="&nbsp;" />
+                                <label htmlFor="bio">Biografia</label>
+                            </div>
+                            <div className="form-group-config">
+                                <input type="email" name="email" defaultValue={auth.email} placeholder="&nbsp;" />
+                                <label htmlFor="email">Correo electronico</label>
+                            </div>
+                            <div className="form-group-config">
+                                <input type="password" name="password" placeholder="&nbsp;" />
+                                <label htmlFor="password">Contraseña</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="image-container">
+                        <div>
+                            <label htmlFor="file0">imagen de perfil</label>
+                            <div className="general-info__container-avatar">
+                                {auth.image != "default.png" && <img src={`${Global.url}user/avatar/${auth.image}`} className="container-avatar__img" alt="Foto de perfil" />}
+                                {auth.image == "default.png" && <img src={avatar} className="container-avatar__img" alt="Foto de perfil" />}
+                            </div>
+                        </div>
                         <input type="file" name="file0" id='file' />
                     </div>
-
-                    <br />
-                    <input type="submit" value="Actualizar" className="btn btn-success" />
+                    
+                    <div className="button-more">
+                        <input type="submit" value="Actualizar" />
+                    </div>
                 </form>
-                <br />
             </div>
         </>
     )

@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import { Global } from '../../helpers/Global';
 import { Petition } from '../../helpers/Petition';
 import { ListUser } from '../users/ListUser';
-import { useAuth } from '../../hooks/useAuth';
 import { useParams } from 'react-router-dom';
 import { GetProfile } from '../../helpers/GetProfile';
 
@@ -52,9 +51,10 @@ export const Following = () => {
 
     return (
         <>
-            <header className="content__header">
-                <h1 className="content__title">Usuarios que sigue {profile.name}</h1>
-            </header>
+            <div className="content-title">
+                <h1>Usuarios que sigue {profile.name}</h1>
+            </div>
+
             <ListUser
                 users={users}
                 getUsers={getUsers}

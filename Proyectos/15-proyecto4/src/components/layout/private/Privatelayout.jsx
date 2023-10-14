@@ -14,12 +14,12 @@ export const Privatelayout = () => {
             <div className='layout'>
                 {/* LAYOUT */}
                 <Header />
+                {/* Barra lateral */}
+                <Sidebar />
                 {/* Contenido principal */}
                 <section>
                     {auth._id ? <Outlet /> : <Navigate to="/login" />}
                 </section>
-                {/* Barra lateral */}
-                <Sidebar />
             </div>
         )
     }
